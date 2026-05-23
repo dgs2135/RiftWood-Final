@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5 d-flex justify-content-center align-items-center" style="min-height:70vh;">
+  <div class="card shadow-lg p-4" style="max-width:400px;width:100%;border-radius:18px;">
+    <h2 class="text-center mb-4 fw-bold" style="letter-spacing:1px;">Login</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <input type="text" name="username" class="form-control form-control-lg" placeholder="Username" required autofocus>
+      </div>
+      <div class="mb-3">
+        <input type="password" name="password" class="form-control form-control-lg" placeholder="Password" required>
+      </div>
+      <div class="d-grid mb-2">
+        <button type="submit" class="btn btn-primary btn-lg">Login</button>
+      </div>
+      <div class="text-center mb-2">
+        <a href="{% url 'recover_password' %}" class="link-secondary small">Forgot Password?</a>
+      </div>
+      <div class="text-center">
+        <span class="text-muted small">Don't have an account?</span>
+        <a href="{% url 'register' %}" class="link-primary small">Register</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

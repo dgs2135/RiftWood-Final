@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+:root {
+  --rw-black: #181818;
+  --rw-wood: #b98c5e;
+  --rw-gold: #e6c77c;
+  --rw-offwhite: #f8f6f2;
+  --rw-gray: #444;
+}
+
+.rw-testimonial-card {
+  background: var(--rw-offwhite);
+  border: none;
+  box-shadow: 0 2px 16px #0001;
+  border-radius: 0;
+  transition: box-shadow 0.2s;
+}
+.rw-testimonial-card:hover {
+  box-shadow: 0 4px 32px #b98c5e33;
+}
+.rw-avatar {
+  background: var(--rw-wood);
+  color: var(--rw-black);
+  border-radius: 0;
+  width: 44px; height: 44px;
+  font-size: 1.3rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 1px 4px #0002;
+}
+.rw-testimonial-meta {
+  color: var(--rw-gray);
+  font-size: 0.97rem;
+}
+.rw-testimonial-content {
+  font-size: 1.13rem;
+  line-height: 1.7;
+  color: var(--rw-black);
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+.rw-testimonial-form .form-label {
+  color: var(--rw-black);
+  font-weight: 600;
+}
+.rw-testimonial-form textarea {
+  border-radius: 0;
+  border: 1.5px solid var(--rw-wood);
+  background: #fff;
+  color: var(--rw-black);
+}
+.rw-testimonial-form .btn-primary, .rw-testimonial-form .btn-primary:focus {
+  background: var(--rw-wood);
+  color: var(--rw-black);
+  border: none;
+  border-radius: 0;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 1px 4px #b98c5e22;
+  transition: background 0.2s;
+}
+.rw-testimonial-form .btn-primary:hover {
+  background: var(--rw-gold);
+  color: var(--rw-black);
+}
+.rw-section-title {
+  color: var(--rw-black);
+  letter-spacing: 1px;
+  font-weight: 800;
+}
+.rw-card-divider {
+  border-top: 2px solid var(--rw-wood);
+  margin: 1.2rem 0 1.5rem 0;
+}
+</style>
+<div class="container py-5" style="max-width: 900px; margin: 0 auto;">
+    <h2 class="text-center mb-5 display-5 rw-section-title">What Our Customers Say</h2>
+    <div class="row g-4">
+        <!-- Left: Submit Testimonial -->
+        <div class="col-md-5">
+            <div class="card rw-testimonial-card h-100">
+                <div class="card-body p-4">
+                    <h4 class="mb-3 fw-semibold" style="color:var(--rw-wood);">Share Your Experience</h4>
+                    <form method="post" id="testimonial-form" autocomplete="off" class="rw-testimonial-form">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Your Testimonial</label>
+                            <textarea name="content" id="content" class="form-control" rows="5" placeholder="Share your experience..." required style="resize:vertical;"></textarea>
+                        </div>
+                        {% if user.is_authenticated %}
+                            <button type="submit" class="btn btn-primary w-100 py-2">Submit Testimonial</button>
+                        {% else %}
+                            <a href="{% url 'login' %}?next={% url 'testimonials' %}" class="btn btn-primary w-100 py-2">Log in to Submit</a>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Right: Testimonials List -->
+        <div class="col-md-7">
+            <div class="d-flex flex-column gap-3">
+                {% for testimonial in testimonials %}
+                    <div class="card rw-testimonial-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="rw-avatar me-3">
+                                    {{ testimonial.user.username|slice:":1"|upper }}
+                                </div>
+                                <div>
+                                    <span class="fw-semibold" style="color:var(--rw-black);">{{ testimonial.user.username }}</span><br>
+                                    <small class="rw-testimonial-meta">{{ testimonial.created_at|date:"M d, Y" }}</small>
+                                </div>
+                            </div>
+                            <div class="rw-card-divider"></div>
+                            <p class="mb-0 rw-testimonial-content">{{ testimonial.content }}</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="alert alert-info text-center" style="background:var(--rw-offwhite); color:var(--rw-black); border:1.5px solid var(--rw-wood); border-radius:0;">No testimonials yet. Be the first to post one!</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

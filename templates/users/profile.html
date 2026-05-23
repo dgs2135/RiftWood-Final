@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .profile-label { font-weight: 600; }
+    .profile-value { font-size: 1.08rem; }
+    .profile-section-title { font-size: 1.2rem; font-weight: 700; margin-top: 2rem; letter-spacing: 1px; }
+    .profile-card { border-radius: 1rem; background: #fff; box-shadow: 0 2px 16px 0 #e6e6e6; }
+    .profile-btn-row .btn { min-width: 140px; margin-right: 10px; margin-bottom: 10px; }
+</style>
+<div class="container py-5" style="background: #f7f8fa; min-height: 100vh;">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="profile-card p-4">
+                <h2 class="mb-4 text-center profile-form-title">Customer Profile</h2>
+                <div class="mb-3"><span class="profile-label">Name:</span> <span class="profile-value">{{ user.first_name }} {{ user.last_name }}</span></div>
+                <div class="mb-3"><span class="profile-label">Username:</span> <span class="profile-value">{{ user.username }}</span></div>
+                <div class="mb-3"><span class="profile-label">Email:</span> <span class="profile-value">{{ user.email }}</span></div>
+                <div class="profile-section-title mb-2">Shipping Address</div>
+                <div class="mb-1 profile-value">
+                    {{ user.profile.address_line1 }}<br>
+                    {% if user.profile.address_line2 %}{{ user.profile.address_line2 }}<br>{% endif %}
+                    {{ user.profile.city }}, {{ user.profile.state }} {% if user.profile.zip_code %}{{ user.profile.zip_code }}{% endif %}<br>
+                    {{ user.profile.country }}
+                </div>
+                <div class="profile-btn-row mt-4">
+                    <a class="btn btn-primary" href="{% url 'update_profile' %}">Update Profile</a>
+                    <a class="btn btn-primary" href="{% url 'change_password' %}">Change Password</a>
+                    <a class="btn btn-success" href="{% url 'orders' %}">My Orders</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

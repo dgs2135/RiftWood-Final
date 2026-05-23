@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% block content %}
+<script>
+  // Add 'homepage' class to body for homepage-specific navbar behavior
+  document.addEventListener('DOMContentLoaded', function() {
+    document.body.classList.add('homepage');
+  });
+</script>
+
+<!-- Hero Carousel -->
+<div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000" style="position:relative;z-index:1;">
+  <div class="carousel-inner">
+    <!-- Slide 1: Showroom -->
+    <div class="carousel-item active">
+      <div class="hero-bg" style="background-image:url('/static/images/RiftWood showroom interior.png');">
+        <div class="hero-overlay"></div>
+        <div class="hero-content container text-center animate__animated animate__fadeInDown">
+          <h1 class="display-3 fw-bold mb-3" style="color:#fff;">Welcome to RiftWood</h1>
+          <p class="lead mb-4" style="color:#f7e7c1;max-width:600px;margin:auto;">
+            RiftWood is dedicated to building 100% handcrafted and customizable electric guitars, bass guitars, and drum kits for players who crave tone, reliability, and style.
+          </p>
+          <a href="{% url 'about' %}" class="btn btn-outline-dark build-yours-btn btn-lg px-5 animate__animated animate__pulse animate__delay-1.5s">Learn More About Us</a>
+        </div>
+      </div>
+    </div>
+    <!-- Slide 2: Custom Shop -->
+    <div class="carousel-item">
+      <div class="hero-bg" style="background-image:url('/static/images/Profissao-musico-o-que-faz-um-luthier.jpg');">
+        <div class="hero-overlay"></div>
+        <div class="hero-content container text-center animate__animated animate__fadeInDown">
+          <h1 class="display-4 fw-bold mb-3" style="color:#fff;">Custom Shop</h1>
+          <p class="lead mb-4" style="color:#f7e7c1;max-width:600px;margin:auto;">
+            No templates. No shortcuts. Just handcrafted excellence. Every RiftWood instrument is made-to-order using carefully selected materials, quality hardware, and designs tailored to your playing style.
+          </p>
+          <a href="#custom-shop" class="btn btn-outline-dark build-yours-btn btn-lg px-5 animate__animated animate__pulse animate__delay-1.5s">Explore Custom Shop</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+
+<!-- Custom Shop Section -->
+<section id="custom-shop" class="custom-shop-section py-5" style="background:#fff;">
+  <div class="text-center animate__animated animate__fadeInUp animate__delay-1.5s">
+    <br>
+    <br>
+    <h2 class="display-5 fw-bold mb-3">Custom Shop</h2>
+    <p class="mb-4" style="max-width:650px;margin:auto;font-size:1.15rem;">
+      Every RiftWood instrument is made-to-order. Choose your woods, finishes, hardware, and more. Whether you want your first custom guitar, a reliable touring bass, or a studio-worthy drum kit — you’re in the right place.
+    </p>
+    <div class="row g-0 text-center" style="min-height: 320px;">
+      <div class="col-12 col-md-4 d-flex align-items-stretch">
+        <div class="product-section w-100 d-flex flex-column justify-content-center align-items-center animate__animated animate__fadeInLeft animate__delay-1.5s" style="background:#232323;color:#fff;min-height:320px;">
+          <img src="/static/images/guitar_specs/lp-Shape.svg" class="cardicon" style="width: auto; height: 60px;">
+          <h2 class="display-6 fw-bold mb-2">Guitar</h2>
+          <p class="proddesc">Design your dream electric guitar with custom woods, pickups, finishes, and hardware.</p>
+          <div class="fs-4 mb-3">Starting at <span style="color:#ffb400;">$500</span></div>
+          <a href="{% url 'guitarbuilder' %}" class="btn btn-outline-dark build-yours-btn mt-3 animate__animated animate__fadeInUp animate__delay-1.5s">Build Yours</a>
+        </div>
+      </div>
+      <div class="col-12 col-md-4 d-flex align-items-stretch">
+        <div class="product-section w-100 d-flex flex-column justify-content-center align-items-center animate__animated animate__fadeInUp animate__delay-1.5s" style="background:#181818;color:#fff;min-height:320px;">
+          <img src="/static/images/bass_specs/RB-Shape.svg" class="cardicon" style="width: auto; height: 60px;">
+          <h2 class="display-6 fw-bold mb-2">Bass</h2>
+          <p class="proddesc">Build a custom bass with your choice of scale, tonewoods, electronics, and style.</p>
+          <div class="fs-4 mb-3">Starting at <span style="color:#ffb400;">$500</span></div>
+          <a href="{% url 'bassbuilder' %}" class="btn btn-outline-dark build-yours-btn mt-3 animate__animated animate__fadeInUp animate__delay-1.5s">Build Yours</a>
+        </div>
+      </div>
+      <div class="col-12 col-md-4 d-flex align-items-stretch">
+        <div class="product-section w-100 d-flex flex-column justify-content-center align-items-center animate__animated animate__fadeInRight animate__delay-1.5s" style="background:#2d1c0b;color:#fff;min-height:320px;">
+          <img src="/static/images/drumicon.svg" class="cardicon" style="width: auto; height: 60px;">
+          <h2 class="display-6 fw-bold mb-2">Drum Kit</h2>
+          <p class="proddesc">Craft your perfect drum kit with custom shells, finishes, and hardware tailored to your sound.</p>
+          <div class="fs-4 mb-3">Starting at <span style="color:#ffb400;">$700</span></div>
+          <a href="{% url 'drumsbuilder' %}" class="btn btn-outline-dark build-yours-btn mt-3 animate__animated animate__fadeInUp animate__delay-1.5s">Build Yours</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Support Section -->
+<section class="support-section py-5">
+  <div class="container text-center animate__animated animate__fadeInUp animate__delay-1.8s">
+    <h2 class="fw-bold mb-3">Need Help or Have Questions?</h2>
+    <p class="mb-4" style="font-size:1.1rem;max-width:600px;margin:auto;">Our team is here to help you with custom orders, product questions, and support. Reach out and we’ll get back to you quickly.</p>
+    <a href="{% url 'contact' %}" class="btn btn-primary btn-lg px-5 animate__animated animate__pulse animate__delay-1.5s">Contact Support</a>
+  </div>
+</section>
+
+<!-- Full-width and background override styles -->
+<style>
+body, html {
+  width: 100vw;
+  min-width: 100vw;
+  max-width: 100vw;
+}
+
+.hero-bg {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(24,24,24,0.68);
+  z-index: 1;
+}
+.hero-content {
+  position: relative;
+  background: transparent;
+  z-index: 2;
+  padding: 6rem 1rem 4rem 1rem;
+  animation: fadeInDown 1.2s cubic-bezier(.4,0,.2,1);
+}
+.carousel-inner {
+  border-radius: 0 0 24px 24px;
+  overflow: hidden;
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0 auto;
+}
+.product-section {
+  padding: 3.5rem 1rem 3rem 1rem;
+  animation: fadeInUp 1.2s cubic-bezier(.4,0,.2,1);
+}
+
+.display-6 {
+    color: white;
+}
+
+.cardicon {
+  filter: invert(100%);
+}
+
+
+.btn.btn-outline-dark.build-yours-btn,
+.btn.build-yours-btn {
+  border: 2px solid #fff !important;
+  color: #fff !important;
+  background: transparent !important;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.btn.btn-outline-dark.build-yours-btn:hover,
+.btn.build-yours-btn:hover {
+  background: #fff !important;
+  color: #232323 !important;
+  border: 2px solid #fff !important;
+}
+
+@media (max-width: 991px) {
+  .carousel-inner { border-radius: 0; }
+  .product-section { min-height: 220px; padding: 2rem 1rem; }
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+</style>
+<!-- Animate.css CDN for more animations -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+{% endblock %}

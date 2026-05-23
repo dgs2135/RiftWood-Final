@@ -1,0 +1,548 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title mb-4 text-center">Design Your Custom Bass</h2>
+                    <form method="post" class="mb-4" id="bassbuilder-form">
+                        {% csrf_token %}
+                        <div id="form-error-message" class="alert alert-danger" style="display:none;"></div>
+
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Orientation</label>
+                            <select name="orientation" class="form-select" required>
+                                <option value="" selected disabled hidden>Select Orientation</option>
+                                <option value="Right-handed">Right-handed</option>
+                                <option value="Left-handed">Left-handed</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Number of Strings</label>
+                            <select name="number_of_strings" class="form-select" required>
+                                <option value="" selected disabled hidden>Select Number of Strings</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Body</label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Body Shape</label>
+                                    <select name="body_shape" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Body Shape</option>
+                                        <option value="PR-Shape" data-img="{% static 'images/bass_specs/PR-Shape.svg' %}" data-desc="Precision*-style shape.">PR-Shape</option>
+                                        <option value="JZ-Shape" data-img="{% static 'images/bass_specs/JZ-Shape.svg' %}" data-desc="Jazz*-style shape.">JZ-Shape</option>
+                                        <option value="MS-Shape" data-img="{% static 'images/bass_specs/MS-Shape.svg' %}" data-desc="Stringray*-style shape.">MS-Shape</option>
+                                        <option value="HV-Shape" data-img="{% static 'images/bass_specs/HV-Shape.svg' %}" data-desc="Vintage Violin-style shape.">HV-Shape</option>
+                                        <option value="RB-Shape" data-img="{% static 'images/bass_specs/RB-Shape.svg' %}" data-desc="Retro Rickenbacker*-inspired shape.">RB-Shape</option>
+                                        <option value="DC-Shape" data-img="{% static 'images/bass_specs/DC-Shape.svg' %}" data-desc="EB-0* inspired double cutaway.">DC-Shape</option>
+                                        <option value="TB-Shape" data-img="{% static 'images/bass_specs/TB-Shape.svg' %}" data-desc="Thunderbird*-style shape.">TB-Shape</option>
+                                    </select>
+                                    <div class="d-flex align-items-center mt-2">
+                                        <img id="bass_body_shape_img" src="" alt="Body Shape Swatch" class="img-thumbnail me-2" style="display:none;max-width:100px;">
+                                        <span id="bass_body_shape_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Body Wood Type</label>
+                                    <select name="body_wood" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Body Wood</option>
+                                        <option value="Maple" data-desc="Bright tone, strong grain.">Maple</option>
+                                        <option value="Alder" data-desc="Balanced, full sound.">Alder</option>
+                                        <option value="Ash" data-desc="Resonant, pronounced grain.">Ash</option>
+                                        <option value="Mahogany" data-desc="Warm, rich tone.">Mahogany</option>
+                                        <option value="Basswood" data-desc="Lightweight, soft mids.">Basswood</option>
+                                        <option value="Korina" data-desc="Vintage, balanced.">Korina</option>
+                                    </select>
+                                    <div class="mt-2">
+                                        <span id="body_wood_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Finish & Pickguard</label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Finish</label>
+                                    <div class="d-flex flex-wrap align-items-center" id="finish_swatches">
+                                        <!-- Swatches -->
+                                        <div class="swatch" data-value="Aged White" data-img="{% static 'images/finishes/aged white.png' %}" data-desc="Aged White" title="Aged White">
+                                            <img src="{% static 'images/finishes/aged white.png' %}" alt="Aged White" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Aqua" data-img="{% static 'images/finishes/aqua.png' %}" data-desc="Aqua (+$20)" title="Aqua">
+                                            <img src="{% static 'images/finishes/aqua.png' %}" alt="Aqua" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Black" data-img="{% static 'images/finishes/black.png' %}" data-desc="Black" title="Black">
+                                            <img src="{% static 'images/finishes/black.png' %}" alt="Black" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Blue Burst" data-img="{% static 'images/finishes/blue burst.png' %}" data-desc="Blue Burst (+$30)" title="Blue Burst">
+                                            <img src="{% static 'images/finishes/blue burst.png' %}" alt="Blue Burst" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Cherry Red" data-img="{% static 'images/finishes/cherry red.png' %}" data-desc="Cherry Red" title="Cherry Red">
+                                            <img src="{% static 'images/finishes/cherry red.png' %}" alt="Cherry Red" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Cherry Sunburst" data-img="{% static 'images/finishes/cherry sunburst.png' %}" data-desc="Cherry Sunburst" title="Cherry Sunburst">
+                                            <img src="{% static 'images/finishes/cherry sunburst.png' %}" alt="Cherry Sunburst" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Gold" data-img="{% static 'images/finishes/gold.png' %}" data-desc="Gold (+$30)" title="Gold">
+                                            <img src="{% static 'images/finishes/gold.png' %}" alt="Gold" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Green Burst" data-img="{% static 'images/finishes/green burst.png' %}" data-desc="Green Burst (+$30)" title="Green Burst (+$30)">
+                                            <img src="{% static 'images/finishes/green burst.png' %}" alt="Green Burst" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Metallic Purple" data-img="{% static 'images/finishes/metallic purple.png' %}" data-desc="Metallic Purple (+$30)" title="Metallic Purple (+$30)">
+                                            <img src="{% static 'images/finishes/metallic purple.png' %}" alt="Metallic Purple" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Natural" data-img="{% static 'images/finishes/natural.png' %}" data-desc="Natural" title="Natural">
+                                            <img src="{% static 'images/finishes/natural.png' %}" alt="Natural" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Pelham Blue" data-img="{% static 'images/finishes/pelham blue.png' %}" data-desc="Pelham Blue (+$30)" title="Pelham Blue (+$30)">
+                                            <img src="{% static 'images/finishes/pelham blue.png' %}" alt="Pelham Blue" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Pink" data-img="{% static 'images/finishes/pink.png' %}" data-desc="Pink (+$20)" title="Pink (+$20)">
+                                            <img src="{% static 'images/finishes/pink.png' %}" alt="Pink" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Purple Burst" data-img="{% static 'images/finishes/purple burst.png' %}" data-desc="Purple Burst (+$30)" title="Purple Burst (+$30)">
+                                            <img src="{% static 'images/finishes/purple burst.png' %}" alt="Purple Burst" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Sparkling Blue" data-img="{% static 'images/finishes/sparkling blue.png' %}" data-desc="Sparkling Blue" title="Sparkling Blue">
+                                            <img src="{% static 'images/finishes/sparkling blue.png' %}" alt="Sparkling Blue" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Surf Green" data-img="{% static 'images/finishes/surf green.png' %}" data-desc="Surf Green" title="Surf Green">
+                                            <img src="{% static 'images/finishes/surf green.png' %}" alt="Surf Green" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Tobacco Burst" data-img="{% static 'images/finishes/tobacco burst.png' %}" data-desc="Tobacco Burst" title="Tobacco Burst">
+                                            <img src="{% static 'images/finishes/tobacco burst.png' %}" alt="Tobacco Burst" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="TV Yellow" data-img="{% static 'images/finishes/tv yellow.png' %}" data-desc="TV Yellow" title="TV Yellow">
+                                            <img src="{% static 'images/finishes/tv yellow.png' %}" alt="TV Yellow" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="White" data-img="{% static 'images/finishes/white.png' %}" data-desc="White" title="White">
+                                            <img src="{% static 'images/finishes/white.png' %}" alt="White" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="finish" id="finish_input" required>
+                                    <div class="d-flex align-items-center mt-2">
+                                        <img id="finish_img" src="" alt="Finish Swatch" class="img-thumbnail me-2" style="display:none;max-width:60px;">
+                                        <span id="finish_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Pickguard (Optional)</label>
+                                    <div class="d-flex flex-wrap align-items-center" id="pickguard_swatches">
+                                        <div class="swatch" data-value="None" data-img="" data-desc="No Pickguard" title="None">
+                                            <div style="width:40px;height:40px;border:1px solid #ccc;display:flex;align-items:center;justify-content:center;">None</div>
+                                        </div>
+                                        <div class="swatch" data-value="White" data-img="{% static 'images/pickguard_colors/white.png' %}" data-desc="White (+$10)" title="White">
+                                            <img src="{% static 'images/pickguard_colors/white.png' %}" alt="White" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Aged White" data-img="{% static 'images/pickguard_colors/aged white.png' %}" data-desc="Aged White" title="Aged White">
+                                            <img src="{% static 'images/pickguard_colors/aged white.png' %}" alt="Aged White" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Black" data-img="{% static 'images/pickguard_colors/black.png' %}" data-desc="Black" title="Black">
+                                            <img src="{% static 'images/pickguard_colors/black.png' %}" alt="Black" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="White Pearl" data-img="{% static 'images/pickguard_colors/white pearl.png' %}" data-desc="White Pearl (+$25)" title="White Pearl">
+                                            <img src="{% static 'images/pickguard_colors/white pearl.png' %}" alt="White Pearl" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Tortoiseshell" data-img="{% static 'images/pickguard_colors/tortoiseshell.png' %}" data-desc="Tortoiseshell (+$20)" title="Tortoiseshell">
+                                            <img src="{% static 'images/pickguard_colors/tortoiseshell.png' %}" alt="Tortoiseshell" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Black Pearl" data-img="{% static 'images/pickguard_colors/black pearl.png' %}" data-desc="Black Pearl (+$25)" title="Black Pearl">
+                                            <img src="{% static 'images/pickguard_colors/black pearl.png' %}" alt="Black Pearl" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="pickguard" id="pickguard_input">
+                                    <div class="d-flex align-items-center mt-2">
+                                        <img id="pickguard_img" src="" alt="Pickguard Swatch" class="img-thumbnail me-2" style="display:none;max-width:60px;">
+                                        <span id="pickguard_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Neck</label>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Neck Shape</label>
+                                    <select name="neck_shape" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Neck Shape</option>
+                                        <option value="C-Shape">C-Shape</option>
+                                        <option value="D-Shape">D-Shape</option>
+                                        <option value="U-Shape">U-Shape</option>
+                                        <option value="V-Shape">V-Shape</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Neck Wood Type</label>
+                                    <select name="neck_wood" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Neck Wood</option>
+                                        <option value="Maple">Maple</option>
+                                        <option value="Alder">Alder</option>
+                                        <option value="Ash">Ash</option>
+                                        <option value="Mahogany">Mahogany</option>
+                                        <option value="Spruce">Spruce</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Fingerboard Wood Type</label>
+                                    <select name="fingerboard_wood" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Fingerboard Wood</option>
+                                        <option value="Maple">Maple</option>
+                                        <option value="Rosewood">Rosewood</option>
+                                        <option value="Ebony">Ebony</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 border-bottom pb-3">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Pickup Choices</label>
+                                    <label class="form-label">Pickup</label>
+                                    <select name="pickup" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Pickup</option>
+                                        <option value="PR-Style" data-img="{% static 'images/bass_specs/PR-Style.png' %}" data-desc="Classic Precision*-style split single coil for punchy mids.">PR-Style</option>
+                                        <option value="JZ-Style" data-img="{% static 'images/bass_specs/JZ-Style.png' %}" data-desc="Jazz*-style single coil for bright, clear tone.">JZ-Style</option>
+                                        <option value="PRJZ-Style" data-img="{% static 'images/bass_specs/PRJZ-Style.png' %}" data-desc="Combination of split and single coil for versatility.">PRJZ-Style</option>
+                                        <option value="DC-Style" data-img="{% static 'images/bass_specs/DC-Style.png' %}" data-desc="Dual coil humbucker for thick, modern sound.">DC-Style</option>
+                                        <option value="Dual Soapbar" data-img="{% static 'images/bass_specs/Dual Soapbar.png' %}" data-desc="Dual soapbar pickups for powerful, modern tones.">Dual Soapbar</option>
+                                        <option value="MS-Style" data-img="{% static 'images/bass_specs/MS-Style.png' %}" data-desc="Musicman*-style humbucker for aggressive punch.">MS-Style</option>
+                                    </select>
+                                    <div class="d-flex align-items-center mt-2">
+                                        <img id="pickup_img" src="" alt="Pickup Swatch" class="img-thumbnail me-2 pickup-square-img" style="display:none;width:100px;height:100px;object-fit:contain;">
+                                        <span id="pickup_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Hardware Color</label>
+                                    <div class="d-flex flex-wrap align-items-center" id="hardware_color_swatches">
+                                        <div class="swatch" data-value="Chrome" data-img="{% static 'images/hardware_colors/chrome.png' %}" data-desc="Chrome hardware" title="Chrome">
+                                            <img src="{% static 'images/hardware_colors/chrome.png' %}" alt="Chrome" class="img-thumbnail" style="max-width:50px;">
+                                        </div>
+                                        <div class="swatch" data-value="Gold" data-img="{% static 'images/hardware_colors/gold.png' %}" data-desc="Gold hardware (+$60)" title="Gold">
+                                            <img src="{% static 'images/hardware_colors/gold.png' %}" alt="Gold" class="img-thumbnail" style="max-width:50px;">
+                                        </div>
+                                        <div class="swatch" data-value="Black" data-img="{% static 'images/hardware_colors/black.png' %}" data-desc="Black hardware (+$30)" title="Black">
+                                            <img src="{% static 'images/hardware_colors/black.png' %}" alt="Black" class="img-thumbnail" style="max-width:50px;">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="hardware_color" id="hardware_color_input" required>
+                                    <div class="d-flex align-items-center mt-2">
+                                        <img id="hardware_color_img" src="" alt="Hardware Swatch" class="img-thumbnail me-2" style="display:none;max-width:60px;">
+                                        <span id="hardware_color_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Add-ons (Optional)</label>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Active/Passive Toggle" id="addon1">
+                                        <label class="form-check-label" for="addon1">Active/Passive Toggle (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Coil Splitting" id="addon2">
+                                        <label class="form-check-label" for="addon2">Coil Splitting (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Series/Parallel Switching" id="addon3">
+                                        <label class="form-check-label" for="addon3">Series/Parallel Switching (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Treble Bleed" id="addon4">
+                                        <label class="form-check-label" for="addon4">Treble Bleed (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Volume/Tone Bypass" id="addon5">
+                                        <label class="form-check-label" for="addon5">Volume/Tone Bypass (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Kill Switch" id="addon6">
+                                        <label class="form-check-label" for="addon6">Kill Switch (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Strap Locks" id="addon7">
+                                        <label class="form-check-label" for="addon7">Strap Locks (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Thumb Rest" id="addon8">
+                                        <label class="form-check-label" for="addon8">Thumb Rest (+$25)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Additional Requests (Optional)</label>
+                            <textarea name="additional_requests" class="form-control"></textarea>
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <h4 id="price-quote" class="fw-bold text-success">Subtotal: $500</h4>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn place-order-btn" id="place-order-btn">Place Order</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+document.getElementById('place-order-btn').addEventListener('click', function(e) {
+    var isAuthenticated = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
+    if (isAuthenticated) {
+        form.submit();
+    } else {
+        window.location.href = "{% url 'login' %}?next={% url 'bassbuilder' %}";
+    }
+
+    var form = document.getElementById('bassbuilder-form');
+    var errorDiv = document.getElementById('form-error-message');
+    errorDiv.style.display = 'none';
+    errorDiv.textContent = '';
+
+    // Validate required fields (including hidden swatch fields)
+    var requiredFields = form.querySelectorAll('[required]');
+    var firstInvalid = null;
+    requiredFields.forEach(function(field) {
+        // For hidden swatch fields, check value
+        if (field.offsetParent === null || field.type === 'hidden') {
+            if (!field.value) {
+                if (!firstInvalid) firstInvalid = field;
+                field.classList.add('is-invalid');
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        } else if (!field.value) {
+            if (!firstInvalid) firstInvalid = field;
+            field.classList.add('is-invalid');
+        } else {
+            field.classList.remove('is-invalid');
+        }
+    });
+
+    if (firstInvalid) {
+        e.preventDefault();
+        errorDiv.textContent = "Please fill out all required fields before placing your order.";
+        errorDiv.style.display = '';
+        // Scroll to first invalid field
+        var scrollTo = firstInvalid;
+        // If hidden, scroll to its swatch container
+        if (firstInvalid.type === 'hidden') {
+            var swatchDiv = firstInvalid.previousElementSibling;
+            if (swatchDiv && swatchDiv.classList.contains('d-flex')) {
+                scrollTo = swatchDiv;
+            }
+        }
+        scrollTo.scrollIntoView({behavior: "smooth", block: "center"});
+        return;
+    }
+
+
+});
+function setupSpecPreview(selectName, imgId, descId) {
+    var select = document.getElementsByName(selectName)[0];
+    var img = imgId ? document.getElementById(imgId) : null;
+    var desc = descId ? document.getElementById(descId) : null;
+    if (!select) return;
+    select.addEventListener('change', function() {
+        var opt = select.options[select.selectedIndex];
+        var imgSrc = opt.getAttribute('data-img');
+        var descText = opt.getAttribute('data-desc');
+        if (img && imgSrc) {
+            img.src = imgSrc;
+            img.style.display = '';
+        } else if (img) {
+            img.style.display = 'none';
+        }
+        if (desc) {
+            desc.textContent = descText ? descText : '';
+        }
+    });
+}
+
+// Swatch selection logic for finish, pickguard, hardware color
+function setupSwatchSelection(containerId, inputId, imgId, descId) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    var input = document.getElementById(inputId);
+    var img = imgId ? document.getElementById(imgId) : null;
+    var desc = descId ? document.getElementById(descId) : null;
+    // Set initial value if already selected (for browser autofill)
+    var selected = container.querySelector('.swatch.selected');
+    if (selected) {
+        input.value = selected.getAttribute('data-value');
+        if (img) {
+            var imgSrc = selected.getAttribute('data-img');
+            if (imgSrc) {
+                img.src = imgSrc;
+                img.style.display = '';
+            } else {
+                img.style.display = 'none';
+            }
+        }
+        if (desc) {
+            var descText = selected.getAttribute('data-desc');
+            desc.textContent = descText ? descText : '';
+        }
+    }
+    container.addEventListener('click', function(e) {
+        var swatch = e.target.closest('.swatch');
+        if (!swatch) return;
+        Array.from(container.getElementsByClassName('swatch')).forEach(function(s) {
+            s.classList.remove('selected');
+        });
+        swatch.classList.add('selected');
+        input.value = swatch.getAttribute('data-value');
+        if (img) {
+            var imgSrc = swatch.getAttribute('data-img');
+            if (imgSrc) {
+                img.src = imgSrc;
+                img.style.display = '';
+            } else {
+                img.style.display = 'none';
+            }
+        }
+        if (desc) {
+            var descText = swatch.getAttribute('data-desc');
+            desc.textContent = descText ? descText : '';
+        }
+    });
+}
+
+// --- Pricing Logic ---
+const BASS_BASE_PRICE = 500;
+const BASS_FINISH_UPCHARGE = {
+    'Candy Apple Red': 40,
+    'Blue Burst': 30,
+    'Cherry Sunburst': 30,
+    'Gold': 30,
+    'Green Burst': 30,
+    'Metallic Purple': 30,
+    'Pelham Blue': 30,
+    'Purple Burst': 30,
+    'Aqua': 20,
+    'Pink': 20,
+    'Blue Burst': 30,
+    'Purple Burst': 30
+};
+const BASS_HARDWARE_UPCHARGE = {
+    'Gold': 60,
+    'Black': 30
+};
+const BASS_PICKGUARD_UPCHARGE = {
+    'Pearloid': 25,
+    'Tortoise': 20,
+    'Black': 10,
+    'White': 10
+};
+const BASS_ADDON_PRICE = 25; // per add-on
+
+function getBassSubtotal() {
+    let subtotal = BASS_BASE_PRICE;
+    // Finish upcharge
+    const finish = document.getElementById('finish_input') ? document.getElementById('finish_input').value : '';
+    if (BASS_FINISH_UPCHARGE[finish]) subtotal += BASS_FINISH_UPCHARGE[finish];
+    // Hardware color upcharge
+    const hardware = document.getElementById('hardware_color_input') ? document.getElementById('hardware_color_input').value : '';
+    if (BASS_HARDWARE_UPCHARGE[hardware]) subtotal += BASS_HARDWARE_UPCHARGE[hardware];
+    // Pickguard upcharge
+    const pickguard = document.getElementById('pickguard_input') ? document.getElementById('pickguard_input').value : '';
+    if (BASS_PICKGUARD_UPCHARGE[pickguard]) subtotal += BASS_PICKGUARD_UPCHARGE[pickguard];
+    // Add-ons (checkboxes)
+    const addonChecks = document.querySelectorAll('input[name="addons"]:checked');
+    subtotal += addonChecks.length * BASS_ADDON_PRICE;
+    return subtotal;
+}
+
+function updateBassPriceQuote() {
+    const subtotal = getBassSubtotal();
+    document.getElementById('price-quote').textContent = `Subtotal: $${subtotal}`;
+}
+
+// Update price on all relevant changes
+if (document.getElementById('bassbuilder-form')) {
+    document.getElementById('bassbuilder-form').addEventListener('change', updateBassPriceQuote);
+}
+if (document.getElementById('finish_swatches')) {
+    document.getElementById('finish_swatches').addEventListener('click', function(e) {
+        setTimeout(updateBassPriceQuote, 10);
+    });
+}
+if (document.getElementById('hardware_color_swatches')) {
+    document.getElementById('hardware_color_swatches').addEventListener('click', function(e) {
+        setTimeout(updateBassPriceQuote, 10);
+    });
+}
+if (document.getElementById('pickguard_swatches')) {
+    document.getElementById('pickguard_swatches').addEventListener('click', function(e) {
+        setTimeout(updateBassPriceQuote, 10);
+    });
+}
+// Initial price
+updateBassPriceQuote();
+
+// Setup swatch selection for Finish, Pickguard, Hardware Color
+setupSwatchSelection('finish_swatches', 'finish_input', 'finish_img', 'finish_desc');
+setupSwatchSelection('pickguard_swatches', 'pickguard_input', 'pickguard_img', 'pickguard_desc');
+setupSwatchSelection('hardware_color_swatches', 'hardware_color_input', 'hardware_color_img', 'hardware_color_desc');
+
+// Setup previews for dropdowns
+setupSpecPreview('body_shape', 'bass_body_shape_img', 'bass_body_shape_desc');
+setupSpecPreview('body_wood', '', 'body_wood_desc');
+setupSpecPreview('pickup', 'pickup_img', 'pickup_desc');
+</script>
+<style>
+.swatch {
+    margin: 0 8px 8px 0;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    display: inline-block;
+    transition: border 0.2s;
+}
+.swatch.selected {
+    border: 2px solid #198754;
+}
+.pickup-square-img {
+    width: 80px !important;
+    height: 80px !important;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.place-order-btn {
+    background: transparent !important;
+    border: none !important;
+    color: #b98c5e !important; 
+    font-size: 20px !important;
+    font-weight: bold;
+    padding: 0;
+    box-shadow: none !important;
+    outline: none !important;
+    transition: color 0.2s;
+}
+.place-order-btn:hover, .place-order-btn:focus {
+    color: #e6c77c !important; 
+    text-decoration: underline;
+    background: transparent !important;
+}
+</style>
+{% endblock %}

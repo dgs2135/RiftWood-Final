@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+{% load specs_extras %}
+{% block content %}
+<style>
+    #top-scrollbar {
+        overflow-x: auto;
+        overflow-y: hidden;
+        width: 100%;
+        height: 14px;
+        position: sticky;
+        top: 0;
+        background: #f8f9fa;
+        z-index: 2;
+        border-radius: 6px;
+        box-shadow: 0 1px 2px #0001 inset;
+        margin-bottom: 2px;
+    }
+
+    #top-scrollbar-inner {
+        height: 1px;
+        min-width: 100%;
+        width: 100%;
+        background: transparent;
+        pointer-events: none;
+    }
+
+    /* Streamlined table styles */
+    #orders-table {
+        font-size: 0.97em;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 2px 8px #0001;
+        min-width: 900px;
+    }
+
+    #orders-table th,
+    #orders-table td {
+        border: none;
+        border-bottom: 1px solid #e9ecef;
+        padding: 0.55rem 0.75rem;
+        vertical-align: middle;
+        background: none;
+    }
+
+    #orders-table th {
+        background: #222e3c;
+        color: #fff;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        border-bottom: 2px solid #bfc4c9;
+    }
+
+    #orders-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    #orders-table td {
+        background: #fff;
+        transition: background 0.2s;
+    }
+
+    #orders-table tr:hover td {
+        background: #f3f6fa;
+    }
+
+    /* Prevent text selection on table except for last two columns */
+    #orders-table td,
+    #orders-table th {
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+
+    #orders-table td:last-child,
+    #orders-table td:nth-last-child(2),
+    #orders-table th:last-child,
+    #orders-table th:nth-last-child(2) {
+        user-select: text;
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+    }
+
+    /* Action buttons */
+    .btn-outline-secondary.btn-sm {
+        border-radius: 20px;
+        padding: 2px 14px;
+        font-size: 0.95em;
+    }
+
+    .btn-sm.btn-success {
+        border-radius: 20px;
+        padding: 2px 14px;
+        font-size: 0.95em;
+    }
+
+    .form-select.form-select-sm {
+        border-radius: 12px;
+        font-size: 0.95em;
+        padding: 2px 30px 2px 10px; /* extra right padding for arrow */
+        background-position: right 10px center; /* move arrow away from text */
+        background-size: 16px 16px;
+    }
+
+    .badge.bg-info {
+        background: #e3f2fd !important;
+        color: #1976d2 !important;
+        font-weight: 600;
+        font-size: 0.95em;
+    }
+
+    .badge.bg-secondary {
+        background: #bfc4c9 !important;
+        color: #222e3c !important;
+        font-weight: 600;
+        font-size: 0.95em;
+    }
+</style>
+<div class="container-fluid mt-2 dashboard-max-width">
+    <div class="row justify-content-center">
+        <div class="col-12 p-0">
+            <div class="d-flex align-items-center mb-4">
+                <h1 class="display-5 fw-bold mb-0">Admin Dashboard</h1>
+            </div>
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="card shadow-sm h-100 border-0">
+                        <div class="card-body">
+                            <h5 class="card-title">Quick Actions</h5>
+                            <p class="card-text">Access the full admin panel for detailed management.</p>
+                            <a href="/admin" class="btn btn-primary w-100">Go to Admin Panel</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm h-100 border-0 bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title">Summary</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item bg-light">Total Orders: <strong>{{ orders|length }}</strong></li>
+                                <li class="list-group-item bg-light">Total Users: <strong>{{ stats.users }}</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Orders Management Section -->
+            <div class="card shadow border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0 ">Manage Orders</h5>
+                        <span class="badge bg-secondary">{{ orders|length }} orders</span>
+                    </div>
+                    {% if orders %}
+                    <div class="table-responsive w-100 position-relative" style="overflow-x: auto;">
+                        <div id="top-scrollbar"
+                            style="overflow-x: auto; overflow-y: hidden; width: 100%; height: 16px; position: sticky; top: 0; background: #f8f9fa; z-index: 2;">
+                            <div id="top-scrollbar-inner" style="height: 1px; min-width: 100%; width: 100%;"></div>
+                        </div>
+                        <table class="table table-hover align-middle table-bordered" id="orders-table">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Client</th>
+                                    <th>Instrument</th>
+                                    <th>Subtotal</th>
+                                    <th>Created</th>
+                                    <th>Change Status</th>
+                                    <th>Order Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <td>{{ order.id }}</td>
+                                    <td>
+                                        <span class="fw-semibold text-primary client-address-toggle" style="cursor:pointer;" data-bs-toggle="collapse" data-bs-target="#address-{{ order.id }}" aria-expanded="false" aria-controls="address-{{ order.id }}">
+                                            {{ order.user.first_name }} {{ order.user.last_name }}
+                                        </span>
+                                        <div class="collapse mt-1" id="address-{{ order.id }}">
+                                            <div class="card card-body p-2 bg-light border-0" style="font-size:0.97em;">
+                                                {% if order.user.profile %}
+                                                    <strong>Shipping Address:</strong><br>
+                                                    {{ order.user.profile.address_line1 }}<br>
+                                                    {% if order.user.profile.address_line2 %}{{ order.user.profile.address_line2 }}<br>{% endif %}
+                                                    {{ order.user.profile.city }}, {{ order.user.profile.state }}{% if order.user.profile.zip_code %} {{ order.user.profile.zip_code }}{% endif %}<br>
+                                                    {{ order.user.profile.country }}
+                                                {% else %}
+                                                    <span class="text-muted">No address</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="instrument-specs-toggle" style="cursor:pointer; color:#1976d2; text-decoration:underline;" data-bs-toggle="collapse" data-bs-target="#specs-{{ order.id }}" aria-expanded="false" aria-controls="specs-{{ order.id }}">
+                                            {{ order.get_instrument_display }}
+                                        </span>
+                                        <div class="collapse mt-1" id="specs-{{ order.id }}">
+                                            <div class="card card-body p-2 bg-light border-0" style="font-size:0.97em;">
+                                                <strong>Specs:</strong><br>
+                                                {% if order.specifications %}
+                                                    <ul class="mb-0 ps-3">
+                                                        {% for spec in order.specifications|split_specs %}
+                                                            <li>{{ spec }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                {% else %}
+                                                    <span class="text-muted">No specs available</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if order.total_price %}
+                                            ${{ order.total_price|floatformat:2 }}
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ order.created_at|date:'Y-m-d H:i' }}</td>
+                                    <td>
+                                        <form method="post" action="{% url 'admin_change_order_status' order.id %}" class="d-flex align-items-center gap-2">
+                                            {% csrf_token %}
+                                            <select name="status" class="form-select form-select-sm w-auto">
+                                                {% for value, label in status_choices %}
+                                                    <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ label }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button type="submit" class="btn btn-sm btn-success">Update</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <a href="/admin/riftwood/customorder/{{ order.id }}/change/" class="btn btn-outline-secondary btn-sm" target="_blank">Details</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info mb-0">No orders found.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+// --- Dynamic drag-to-scroll for table ---
+(function() {
+    const tableWrapper = document.querySelector('.table-responsive');
+    const topScrollbar = document.getElementById('top-scrollbar');
+    const topScrollbarInner = document.getElementById('top-scrollbar-inner');
+    const table = document.getElementById('orders-table');
+    let isDown = false;
+    let startX, scrollLeft;
+    tableWrapper.addEventListener('mousedown', function(e) {
+        isDown = true;
+        tableWrapper.classList.add('dragging');
+        startX = e.pageX - tableWrapper.offsetLeft;
+        scrollLeft = tableWrapper.scrollLeft;
+    });
+    tableWrapper.addEventListener('mouseleave', function() {
+        isDown = false;
+        tableWrapper.classList.remove('dragging');
+    });
+    tableWrapper.addEventListener('mouseup', function() {
+        isDown = false;
+        tableWrapper.classList.remove('dragging');
+    });
+    tableWrapper.addEventListener('mousemove', function(e) {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - tableWrapper.offsetLeft;
+        const walk = (x - startX) * 1.5; //scroll-fast
+        tableWrapper.scrollLeft = scrollLeft - walk;
+    });
+    // --- Top scrollbar sync ---
+    function syncScrollbars() {
+        // Set both width and min-width for best compatibility
+        topScrollbarInner.style.width = table.scrollWidth + 'px';
+        topScrollbarInner.style.minWidth = table.scrollWidth + 'px';
+        topScrollbar.scrollLeft = tableWrapper.scrollLeft;
+    }
+    tableWrapper.addEventListener('scroll', function() {
+        topScrollbar.scrollLeft = tableWrapper.scrollLeft;
+    });
+    topScrollbar.addEventListener('scroll', function() {
+        tableWrapper.scrollLeft = topScrollbar.scrollLeft;
+    });
+    window.addEventListener('resize', syncScrollbars);
+    syncScrollbars();
+})();
+
+// Add click-to-show-address for client name
+(function() {
+    document.querySelectorAll('.client-address-toggle').forEach(function(el) {
+        el.addEventListener('click', function(e) {
+            const address = this.getAttribute('data-address').replace(/\\n/g, '\n');
+            const original = this.textContent;
+            this.textContent = address;
+            this.classList.add('text-info');
+            setTimeout(() => {
+                this.textContent = original;
+                this.classList.remove('text-info');
+            }, 2000);
+        });
+    });
+})();
+</script>
+{% endblock %}

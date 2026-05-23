@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .form-label { font-weight: 500; }
+    .form-control { border-radius: 0.5rem; }
+    .card { background: #fff; border-radius: 1rem; }
+    .card-body { background: #fff; }
+    .register-form-title { font-family: 'Montserrat', 'Arial', sans-serif; letter-spacing: 1px; }
+    .register-form-section { font-size: 1.1rem; font-weight: 600; margin-top: 2rem; }
+</style>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-10">
+            <div class="card shadow border-0">
+                <div class="card-body p-4">
+                    <h2>Create Your Account</h2>
+                    <form method="post" autocomplete="off">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label" for="id_username">{{ form.username.label }}</label>
+                            <input type="text" name="username" class="form-control" id="id_username" value="{{ form.username.value|default_if_none:'' }}">
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="id_first_name">{{ form.first_name.label }}</label>
+                                <input type="text" name="first_name" class="form-control" id="id_first_name" value="{{ form.first_name.value|default_if_none:'' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="id_last_name">{{ form.last_name.label }}</label>
+                                <input type="text" name="last_name" class="form-control" id="id_last_name" value="{{ form.last_name.value|default_if_none:'' }}">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="id_email">{{ form.email.label }}</label>
+                            <input type="email" name="email" class="form-control" id="id_email" value="{{ form.email.value|default_if_none:'' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="id_password1">{{ form.password1.label }}</label>
+                            <input type="password" name="password1" class="form-control" id="id_password1">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="id_password2">{{ form.password2.label }}</label>
+                            <input type="password" name="password2" class="form-control" id="id_password2">
+                        </div>
+                        <hr>
+                        <div class="register-form-section mb-3">Shipping Address</div>
+                        <div class="mb-3">
+                            <label class="form-label" for="id_address_line1">{{ form.address_line1.label }}</label>
+                            <input type="text" name="address_line1" class="form-control" id="id_address_line1" value="{{ form.address_line1.value|default_if_none:'' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="id_address_line2">{{ form.address_line2.label }}</label>
+                            <input type="text" name="address_line2" class="form-control" id="id_address_line2" value="{{ form.address_line2.value|default_if_none:'' }}">
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="id_city">{{ form.city.label }}</label>
+                                <input type="text" name="city" class="form-control" id="id_city" value="{{ form.city.value|default_if_none:'' }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="id_state">{{ form.state.label }}</label>
+                                <input type="text" name="state" class="form-control" id="id_state" value="{{ form.state.value|default_if_none:'' }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="id_zip_code">{{ form.zip_code.label }}</label>
+                                <input type="text" name="zip_code" class="form-control" id="id_zip_code" value="{{ form.zip_code.value|default_if_none:'' }}">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="id_country">{{ form.country.label }}</label>
+                            <input type="text" name="country" class="form-control" id="id_country" value="{{ form.country.value|default_if_none:'' }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
+                    </form>
+                    <div class="mt-3 text-center">
+                        <span>Already have an account?</span>
+                        <a href="{% url 'login' %}" class="link-primary">Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+
+/* Dynamic entrance animations (appear on scroll, not on load) */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-fadein-up, .animate-fadein-left, .animate-fadein-right {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+.animate-fadein-up.visible { animation: fadeInUp 0.7s cubic-bezier(.4,0,.2,1) forwards; }
+.animate-fadein-left.visible { animation: fadeInLeft 0.7s cubic-bezier(.4,0,.2,1) forwards; }
+.animate-fadein-right.visible { animation: fadeInRight 0.7s cubic-bezier(.4,0,.2,1) forwards; }
+</style>
+<div class="rw-about-content">
+<div class="container main-content-boxed" style="max-width: 900px; margin: 0 auto; padding: 0;">
+    <!-- Hero Section -->
+    <div class="about-hero position-relative w-100 animate-fadein-up" style="height:340px; overflow:hidden; background:#181818; display:flex; align-items:center; justify-content:center;">
+        <img src="/static/images/RiftWood%20HQ.webp" alt="RiftWood HQ" style="width:100%; height:100%; object-fit:cover; object-position:center; filter:brightness(0.7); border-radius:0;">
+        <div class="position-absolute top-50 start-50 translate-middle text-center text-white" style="z-index:2;">
+            <h1 class="display-4 fw-bold animate-fadein-up" style="color: white">About RiftWood</h1>
+            <p class="lead animate-fadein-up">Custom Instruments, Honest Craft</p>
+        </div>
+    </div>
+    <div class="p-4 p-md-5" style="background:rgba(255,255,255,0.97);">
+        <hr class="mb-4 animate-fadein-up">
+        <h2 class="mt-4 animate-fadein-left">🎯 Our Mission</h2>
+        <p class="animate-fadein-up">To build instruments that meet you where you are—affordable, reliable, and fully custom. Whether you're chasing tone, testing new setups, or finally upgrading from your starter gear, we're here to help you shape your sound <em>your way</em>.</p>
+        <hr class="mb-4 animate-fadein-up">
+        <h2 class="mt-4 animate-fadein-left">🪵 Where It All Started</h2>
+        <div class="row align-items-center mb-4">
+            <div class="col-md-6 mb-3 mb-md-0 animate-fadein-left">
+                <img src="/static/images/Hiroshi%20Tanaka%20Portrait%202025.webp" alt="Hiroshi Tanaka" class="img-fluid w-100" style="border-radius:0; box-shadow:0 2px 16px #0002;">
+            </div>
+            <div class="col-md-6 animate-fadein-right">
+                <p>We didn’t start in a factory—we started in a shed.</p>
+                <p>Back in 1983, in a quiet countryside town in Japan, a furniture craftsman named Hiroshi Tanaka decided to make a guitar from scratch for his son. It wasn’t perfect, but it meant everything. That one guitar changed the course of his workshop—and his life.</p>
+                <p>He shifted from building chairs to building instruments, one order at a time. Musicians in the area began to take notice. A few years later, Hiroshi and his family relocated to <strong>San Jose, California</strong>, bringing his tools, techniques, and philosophy with him.</p>
+            </div>
+        </div>
+        <div class="row align-items-center mb-4">
+            <div class="col-md-6 order-md-2 mb-3 mb-md-0 animate-fadein-right">
+                <img src="/static/images/Profissao-musico-o-que-faz-um-luthier.jpg" alt="Luthier at work" class="img-fluid w-100" style="border-radius:0; box-shadow:0 2px 16px #0002;">
+            </div>
+            <div class="col-md-6 order-md-1 animate-fadein-left">
+                <p>In San Jose, word spread fast—through garage bands, college jam circles, and local shops. Hiroshi’s builds were different. They weren’t flashy. They were <em>honest</em>. Well-built. Custom-feeling without the custom-shop price tag.</p>
+                <p>That was the beginning of something bigger.</p>
+            </div>
+        </div>
+        <div class="row align-items-center mb-4">
+            <div class="col-md-6 mb-3 mb-md-0 animate-fadein-left">
+                <img src="/static/images/A-Guide-to-Different-Drum-Shell-Materials-banner@1200x630-1.jpg" alt="Drum Shells" class="img-fluid w-100" style="border-radius:0; box-shadow:0 2px 16px #0002;">
+            </div>
+            <div class="col-md-6 animate-fadein-right">
+                <p>Every instrument is made-to-order, with the same heart Hiroshi put into that first guitar. No gimmicks. Just honest craftsmanship and deep customization—for musicians who care.</p>
+            </div>
+        </div>
+        <hr class="mb-4 animate-fadein-up">
+        <h2 class="mt-4 animate-fadein-left">🧰 What We Offer</h2>
+        <div class="row align-items-center mb-4">
+            <div class="col-md-6 mb-3 mb-md-0 animate-fadein-left">
+                <img src="/static/images/luthier_tools.jpg" alt="Luthier Tools" class="img-fluid w-100" style="border-radius:0; box-shadow:0 2px 16px #0002;">
+            </div>
+            <div class="col-md-6 animate-fadein-right">
+                <ul>
+                    <li><strong>Fully customizable guitars, basses, and drums</strong></li>
+                    <li><strong>Detailed online configurators</strong> that let you tweak everything: pickups, finishes, hardware, tonewood, scale length—you name it</li>
+                    <li><strong>Clear, flexible pricing</strong> that doesn’t sacrifice build quality</li>
+                    <li><strong>Options built for modders, tweakers, and tone-chasers</strong></li>
+                </ul>
+                <p>Whether you're upgrading from your first rig or chasing a dream build that won’t wreck your budget, we’ve got you.</p>
+            </div>
+        </div>
+        <hr class="mb-4 animate-fadein-up">
+        <h2 class="mt-4 animate-fadein-left">🛠 Built for Players Like You</h2>
+        <div class="row align-items-center mb-4">
+            <div class="col-md-6 order-md-2 mb-3 mb-md-0 animate-fadein-right">
+                <img src="/static/images/maxresdefault.jpg" class="img-fluid w-100" style="border-radius:0; box-shadow:0 2px 16px #0002;">
+            </div>
+            <div class="col-md-6 order-md-1 animate-fadein-left">
+                <p>You’re not just a hobbyist—but you’re not dropping $5K on a boutique build either.<br>
+                You're learning, experimenting, refining, and <em>playing</em>. You know what you like, but you're still exploring what you love.</p>
+                <p>Our goal is to meet you in that middle ground—with tools that help you grow as a musician without boxing you into someone else’s idea of "standard."</p>
+            </div>
+        </div>
+        <hr class="mb-4 animate-fadein-up">
+        <h2 class="mt-4 animate-fadein-left">🌏 From Our Hands to Yours</h2>
+        <div class="row align-items-center mb-4">
+            <div class="col-md-6 mb-3 mb-md-0 animate-fadein-left">
+                <img src="/static/images/1917383.jpg" alt="Shipping Worldwide" class="img-fluid w-100" style="border-radius:0; box-shadow:0 2px 16px #0002;">
+            </div>
+            <div class="col-md-6 animate-fadein-right">
+                <p>We ship worldwide, and every instrument is made-to-order with care. Whether it’s your first real build or your fifth modded bass, we put the same heart into it as Hiroshi did back in '83.</p>
+                <p>No gimmicks. Just honest craftsmanship and deep customization—for musicians who care.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+// Appear-on-scroll: only animate when element enters viewport
+function animateOnScroll() {
+  document.querySelectorAll('.animate-fadein-up, .animate-fadein-left, .animate-fadein-right').forEach(function(el) {
+    var rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 60) {
+      el.classList.add('visible');
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded', animateOnScroll);
+window.addEventListener('scroll', animateOnScroll);
+</script>
+{% endblock %}

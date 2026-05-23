@@ -1,0 +1,836 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title mb-4 text-center">Design Your Custom Drum Kit</h2>
+                    <form method="post" id="drum-builder-form" class="mb-4">
+                        {% csrf_token %}
+                        <div id="form-error-message" class="alert alert-danger" style="display:none;"></div>
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Shell Material</label>
+                            <select name="shell_material" class="form-select" required>
+                                <option value="" selected disabled hidden>Select Shell Material</option>
+                                <option value="Maple" data-desc="Maple: Warm, balanced, versatile.">Maple</option>
+                                <option value="Birch" data-desc="Birch: Bright, focused, punchy.">Birch</option>
+                                <option value="Bubinga" data-desc="Bubinga: Deep, powerful, rich lows.">Bubinga</option>
+                                <option value="Gum" data-desc="Gum: Vintage, warm, round.">Gum</option>
+                                <option value="Mahogany" data-desc="Mahogany: Dark, warm, vintage.">Mahogany</option>
+                                <option value="Walnut" data-desc="Walnut: Warm, dry, controlled.">Walnut</option>
+                                <option value="Maple / Mahogany" data-desc="Maple / Mahogany: Balanced warmth and clarity.">Maple / Mahogany</option>
+                                <option value="Walnut / Birch" data-desc="Walnut / Birch: Focused attack, warm undertones.">Walnut / Birch</option>
+                                <option value="Maple / Gum" data-desc="Maple / Gum: Classic, vintage, balanced.">Maple / Gum</option>
+                            </select>
+                            <div class="mt-2">
+                                <span id="shell_material_desc" class="text-muted"></span>
+                            </div>
+                        </div>
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Shell Thickness</label>
+                            <select name="shell_thickness" class="form-select" required>
+                                <option value="" selected disabled hidden>Select Shell Thickness</option>
+                                <option value="Thin" data-desc="Thin: More resonance, open tone, lighter weight.">Thin</option>
+                                <option value="Medium" data-desc="Medium: Balanced tone and projection.">Medium</option>
+                                <option value="Thick" data-desc="Thick: Focused, punchy sound, more projection.">Thick</option>
+                            </select>
+                            <div class="mt-2">
+                                <span id="shell_thickness_desc" class="text-muted"></span>
+                            </div>
+                        </div>
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Wrap Finish</label>
+                            <div class="d-flex flex-wrap align-items-center" id="finish_swatches">
+                                <div class="swatch" data-value="Aqua" data-img="{% static 'images/drum_finishes/aqua.png' %}" data-desc="Aqua" title="Aqua">
+                                    <img src="{% static 'images/drum_finishes/aqua.png' %}" alt="Aqua" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Black Satin" data-img="{% static 'images/drum_finishes/black satin.png' %}" data-desc="Black Satin" title="Black Satin">
+                                    <img src="{% static 'images/drum_finishes/black satin.png' %}" alt="Black Satin" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Black Oyster" data-img="{% static 'images/drum_finishes/black-oyster.png' %}" data-desc="Black Oyster (+$30)" title="Black Oyster (+$30)">
+                                    <img src="{% static 'images/drum_finishes/black-oyster.png' %}" alt="Black Oyster" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Black Pearl" data-img="{% static 'images/drum_finishes/black-pearl.png' %}" data-desc="Black Pearl (+$30)" title="Black Pearl (+$30)">
+                                    <img src="{% static 'images/drum_finishes/black-pearl.png' %}" alt="Black Pearl" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Blue Burst Fade" data-img="{% static 'images/drum_finishes/blue burst fade.png' %}" data-desc="Blue Burst Fade (+$40)" title="Blue Burst Fade (+$40)">
+                                    <img src="{% static 'images/drum_finishes/blue burst fade.png' %}" alt="Blue Burst Fade" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Blue Oyster" data-img="{% static 'images/drum_finishes/blue-oyster.png' %}" data-desc="Blue Oyster (+$30)" title="Blue Oyster (+$30)">
+                                    <img src="{% static 'images/drum_finishes/blue-oyster.png' %}" alt="Blue Oyster" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Candy Apple Red" data-img="{% static 'images/drum_finishes/candy apple red.png' %}" data-desc="Candy Apple Red (+$50)" title="Candy Apple Red (+$50)">
+                                    <img src="{% static 'images/drum_finishes/candy apple red.png' %}" alt="Candy Apple Red" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Green Sparkle" data-img="{% static 'images/drum_finishes/green sparkle.png' %}" data-desc="Green Sparkle (+$40)" title="Green Sparkle (+$40)">
+                                    <img src="{% static 'images/drum_finishes/green sparkle.png' %}" alt="Green Sparkle" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Magenta" data-img="{% static 'images/drum_finishes/magenta.png' %}" data-desc="Magenta" title="Magenta">
+                                    <img src="{% static 'images/drum_finishes/magenta.png' %}" alt="Magenta" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Natural" data-img="{% static 'images/drum_finishes/natural.png' %}" data-desc="Natural" title="Natural">
+                                    <img src="{% static 'images/drum_finishes/natural.png' %}" alt="Natural" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Orange Sparkle" data-img="{% static 'images/drum_finishes/orange sparkle.png' %}" data-desc="Orange Sparkle (+$40)" title="Orange Sparkle (+$40)">
+                                    <img src="{% static 'images/drum_finishes/orange sparkle.png' %}" alt="Orange Sparkle" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Blue Fade" data-img="{% static 'images/drum_finishes/blue fade.png' %}" data-desc="Blue Fade" title="Blue Fade">
+                                    <img src="{% static 'images/drum_finishes/blue fade.png' %}" alt="Blue Fade" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Purple Fade" data-img="{% static 'images/drum_finishes/purple fade.png' %}" data-desc="Purple Fade (+$40)" title="Purple Fade (+$40)">
+                                    <img src="{% static 'images/drum_finishes/purple fade.png' %}" alt="Purple Fade" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Purple Sparkle" data-img="{% static 'images/drum_finishes/purple sparkle.png' %}" data-desc="Purple Sparkle (+$40)" title="Purple Sparkle (+$40)">
+                                    <img src="{% static 'images/drum_finishes/purple sparkle.png' %}" alt="Purple Sparkle" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Red Fade" data-img="{% static 'images/drum_finishes/red fade.png' %}" data-desc="Red Fade" title="Red Fade">
+                                    <img src="{% static 'images/drum_finishes/red fade.png' %}" alt="Red Fade" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Sparkling Blue" data-img="{% static 'images/drum_finishes/sparkling blue.png' %}" data-desc="Sparkling Blue (+$40)" title="Sparkling Blue (+$40)">
+                                    <img src="{% static 'images/drum_finishes/sparkling blue.png' %}" alt="Sparkling Blue" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Teal" data-img="{% static 'images/drum_finishes/teal.png' %}" data-desc="Teal" title="Teal">
+                                    <img src="{% static 'images/drum_finishes/teal.png' %}" alt="Teal" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="White Satin" data-img="{% static 'images/drum_finishes/white satin.png' %}" data-desc="White Satin" title="White Satin">
+                                    <img src="{% static 'images/drum_finishes/white satin.png' %}" alt="White Satin" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="White Pearl" data-img="{% static 'images/drum_finishes/white-pearl.png' %}" data-desc="White Pearl (+$30)" title="White Pearl (+$30)">
+                                    <img src="{% static 'images/drum_finishes/white-pearl.png' %}" alt="White Pearl" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                            </div>
+                            <input type="hidden" name="finish" id="finish_input" required>
+                            <div class="d-flex align-items-center mt-2">
+                                <img id="finish_img" src="" alt="Finish Swatch" class="img-thumbnail me-2" style="display:none;max-width:60px;">
+                                <span id="finish_desc" class="text-muted"></span>
+                            </div>
+                        </div>
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Kit Preset Configuration (Optional)</label>
+                            <select class="form-select mb-3" id="kit-preset-select">
+                                <option value="custom" selected>Custom</option>
+                                <option value="standard">Standard (2 Up, 1 Down)</option>
+                                <option value="jazz">Jazz (1 Up, 1 Down)</option>
+                                <option value="classic_rock">Classic Rock (1 Up, 1 Down)</option>
+                                <option value="gospel">Gospel (3 Up, 1 Down)</option>
+                                <option value="metal">Metal (2 Up, 2 Down, 2 Kicks)</option>
+                                <option value="fusion">Fusion (2 Up, 2 Down)</option>
+                                <option value="zep">Zep (1 Up, 2 Down)</option>
+                                <option value="star60s">60s Starr (1 Up, 1 Down)</option>
+                                <option value="bigband">Big Band (2 Up, 2 Down)</option>
+                                <option value="modernpop">Modern Pop (1 Up, 1 Down)</option>
+                            </select>
+                        </div>
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Kick</label>
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label>Size (Diameter x Depth)</label>
+                                    <select name="kick_size" class="form-select" required id="kick_size_select">
+                                        <option value="" selected disabled hidden>Select Kick Size</option>
+                                        <option value="18x14">18x14</option>
+                                        <option value="20x16">20x16</option>
+                                        <option value="20x18">20x18</option>
+                                        <option value="22x16">22x16</option>
+                                        <option value="22x18">22x18</option>
+                                        <option value="24x14">24x14</option>
+                                        <option value="24x18">24x18</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Rack Tom</label>
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label>Size (Diameter x Depth)</label>
+                                    <select name="rack_tom_size" class="form-select" required id="rack_tom_size_select">
+                                        <option value="" selected disabled hidden>Select Rack Tom Size</option>
+                                        <option value="8x7">8x7</option>
+                                        <option value="10x7">10x7</option>
+                                        <option value="10x8">10x8</option>
+                                        <option value="12x8">12x8</option>
+                                        <option value="12x9">12x9</option>
+                                        <option value="13x9">13x9</option>
+                                        <option value="13x10">13x10</option>
+                                        <option value="14x11">14x11</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Floor Tom</label>
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label>Size (Diameter x Depth)</label>
+                                    <select name="floor_tom_size" class="form-select" required id="floor_tom_size_select">
+                                        <option value="" selected disabled hidden>Select Floor Tom Size</option>
+                                        <option value="14x12">14x12</option>
+                                        <option value="14x14">14x14</option>
+                                        <option value="16x14">16x14</option>
+                                        <option value="16x16">16x16</option>
+                                        <option value="18x16">18x16</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Additional Components</label>
+                            <div id="additional-components"></div>
+                            <button type="button" class="btn btn-secondary mb-3" id="add-component-btn">Add Component</button>
+                        </div>
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Hardware Color</label>
+                            <div class="d-flex flex-wrap align-items-center" id="hardware_color_swatches">
+                                <div class="swatch" data-value="Chrome" data-img="{% static 'images/hardware_colors/chrome.png' %}" data-desc="Chrome hardware" title="Chrome">
+                                    <img src="{% static 'images/hardware_colors/chrome.png' %}" alt="Chrome" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Gold" data-img="{% static 'images/hardware_colors/gold.png' %}" data-desc="Gold hardware (+$80)" title="Gold">
+                                    <img src="{% static 'images/hardware_colors/gold.png' %}" alt="Gold" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                                <div class="swatch" data-value="Black" data-img="{% static 'images/hardware_colors/black.png' %}" data-desc="Black hardware (+$40)" title="Black">
+                                    <img src="{% static 'images/hardware_colors/black.png' %}" alt="Black" class="img-thumbnail" style="max-width:40px;">
+                                </div>
+                            </div>
+                            <input type="hidden" name="hardware_color" id="hardware_color_input" required>
+                            <div class="d-flex align-items-center mt-2">
+                                <img id="hardware_color_img" src="" alt="Hardware Swatch" class="img-thumbnail me-2" style="display:none;max-width:60px;">
+                                <span id="hardware_color_desc" class="text-muted"></span>
+                            </div>
+                        </div>
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Hoop Type</label>
+                            <select name="hoop_type" class="form-select" required>
+                                <option value="" selected disabled hidden>Select Hoop Type</option>
+                                <option value="Wooden" data-desc="Wooden: Warm tone, classic look.">Wooden</option>
+                                <option value="Single-Flanged" data-desc="Single-Flanged: Vintage style, open sound.">Single-Flanged</option>
+                                <option value="Die-Cast" data-desc="Die-Cast: Focused, bright, more attack.">Die-Cast</option>
+                                <option value="Triple-Flanged" data-desc="Triple-Flanged: Modern, open, balanced.">Triple-Flanged</option>
+                            </select>
+                            <div class="mt-2">
+                                <span id="hoop_type_desc" class="text-muted"></span>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Additional Requests</label>
+                            <textarea name="additional_requests" class="form-control"></textarea>
+                        </div>
+                        <div class="text-center mb-3">
+                            <h4 id="price-quote" class="fw-bold text-success">Subtotal: $700</h4>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn place-order-btn" id="place-order-btn">Place Order</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+document.getElementById('place-order-btn').addEventListener('click', function(e) {
+    var form = document.getElementById('drum-builder-form');
+    var errorDiv = document.getElementById('form-error-message');
+    errorDiv.style.display = 'none';
+    errorDiv.textContent = '';
+
+    // Validate required fields (including hidden swatch fields)
+    var requiredFields = form.querySelectorAll('[required]');
+    var firstInvalid = null;
+    requiredFields.forEach(function(field) {
+        // For hidden swatch fields, check value
+        if (field.offsetParent === null || field.type === 'hidden') {
+            if (!field.value) {
+                if (!firstInvalid) firstInvalid = field;
+                field.classList.add('is-invalid');
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        } else if (!field.value) {
+            if (!firstInvalid) firstInvalid = field;
+            field.classList.add('is-invalid');
+        } else {
+            field.classList.remove('is-invalid');
+        }
+    });
+
+    // Remove all drum size validation logic, only required field check remains
+
+    // Validate additional components
+    var componentGroups = form.querySelectorAll('.component-group');
+    var additionalKickCount = 0;
+    for (var i = 0; i < componentGroups.length; i++) {
+        var group = componentGroups[i];
+        var type = group.querySelector('.component-type').value;
+        if (type === 'kick') {
+            additionalKickCount++;
+        }
+        // No drum size validation, only required field check
+        if (type === 'rack_tom' || type === 'floor_tom' || type === 'snare' || type === 'pancake' || type === 'gong') {
+            var sizeSel = group.querySelector('select[name$="_size[]"]');
+            if (sizeSel && !sizeSel.value) {
+                e.preventDefault();
+                errorDiv.textContent = "Please select a size for all additional components.";
+                errorDiv.style.display = '';
+                sizeSel.classList.add('is-invalid');
+                sizeSel.scrollIntoView({behavior: "smooth", block: "center"});
+                return;
+            }
+        }
+    }
+    // Only allow one additional kick
+    if (additionalKickCount > 1) {
+        e.preventDefault();
+        errorDiv.textContent = "You can only add one additional kick drum.";
+        errorDiv.style.display = '';
+        return;
+    }
+
+    if (firstInvalid) {
+        e.preventDefault();
+        errorDiv.textContent = "Please fill out all required fields before placing your order.";
+        errorDiv.style.display = '';
+        // Scroll to first invalid field
+        var scrollTo = firstInvalid;
+        // If hidden, scroll to its swatch container
+        if (firstInvalid.type === 'hidden') {
+            var swatchDiv = firstInvalid.previousElementSibling;
+            if (swatchDiv && swatchDiv.classList.contains('d-flex')) {
+                scrollTo = swatchDiv;
+            }
+        }
+        scrollTo.scrollIntoView({behavior: "smooth", block: "center"});
+        return;
+    }
+
+    var isAuthenticated = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
+    if (isAuthenticated) {
+        form.submit();
+    } else {
+        window.location.href = "{% url 'login' %}?next={% url 'drumsbuilder' %}";
+    }
+});
+
+// Swatch selection logic for finish, hardware color
+function setupSwatchSelection(containerId, inputId, imgId, descId) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    var input = document.getElementById(inputId);
+    var img = imgId ? document.getElementById(imgId) : null;
+    var desc = descId ? document.getElementById(descId) : null;
+    // Set initial value if already selected (for browser autofill)
+    var selected = container.querySelector('.swatch.selected');
+    if (selected) {
+        input.value = selected.getAttribute('data-value');
+        if (img) {
+            var imgSrc = selected.getAttribute('data-img');
+            if (imgSrc) {
+                img.src = imgSrc;
+                img.style.display = '';
+            } else {
+                img.style.display = 'none';
+            }
+        }
+        if (desc) {
+            var descText = selected.getAttribute('data-desc');
+            desc.textContent = descText ? descText : '';
+        }
+    }
+    container.addEventListener('click', function(e) {
+        var swatch = e.target.closest('.swatch');
+        if (!swatch) return;
+        Array.from(container.getElementsByClassName('swatch')).forEach(function(s) {
+            s.classList.remove('selected');
+        });
+        swatch.classList.add('selected');
+        input.value = swatch.getAttribute('data-value');
+        if (img) {
+            var imgSrc = swatch.getAttribute('data-img');
+            if (imgSrc) {
+                img.src = imgSrc;
+                img.style.display = '';
+            } else {
+                img.style.display = 'none';
+            }
+        }
+        if (desc) {
+            var descText = swatch.getAttribute('data-desc');
+            desc.textContent = descText ? descText : '';
+        }
+    });
+}
+
+// Setup swatch selection for Finish, Hardware Color
+setupSwatchSelection('finish_swatches', 'finish_input', 'finish_img', 'finish_desc');
+setupSwatchSelection('hardware_color_swatches', 'hardware_color_input', 'hardware_color_img', 'hardware_color_desc');
+
+// Setup previews for dropdowns
+function setupSpecPreview(selectName, imgId, descId) {
+    var select = document.getElementsByName(selectName)[0];
+    var img = imgId ? document.getElementById(imgId) : null;
+    var desc = descId ? document.getElementById(descId) : null;
+    if (!select) return;
+    select.addEventListener('change', function() {
+        var opt = select.options[select.selectedIndex];
+        var imgSrc = opt.getAttribute('data-img');
+        var descText = opt.getAttribute('data-desc');
+        if (img && imgSrc) {
+            img.src = imgSrc;
+            img.style.display = '';
+        } else if (img) {
+            img.style.display = 'none';
+        }
+        if (desc) {
+            desc.textContent = descText ? descText : '';
+        }
+    });
+}
+setupSpecPreview('shell_material', '', 'shell_material_desc');
+setupSpecPreview('shell_thickness', '', 'shell_thickness_desc');
+setupSpecPreview('hoop_type', '', 'hoop_type_desc');
+
+// Kit preset logic with automatic additional components and auto-switch to custom
+(function() {
+    var presetSelect = document.getElementById('kit-preset-select');
+    var kick = document.getElementById('kick_size_select');
+    var rack = document.getElementById('rack_tom_size_select');
+    var floor = document.getElementById('floor_tom_size_select');
+    var additionalComponents = document.getElementById('additional-components');
+
+    // Helper to select by value
+    function selectByValue(select, value) {
+        for (var i = 0; i < select.options.length; i++) {
+            if (select.options[i].value === value) {
+                select.selectedIndex = i;
+                select.dispatchEvent(new Event('change'));
+                return;
+            }
+        }
+        select.selectedIndex = 0;
+        select.dispatchEvent(new Event('change'));
+    }
+
+    // Helper to add an additional component and set its value
+    function addComponent(type, sizeValue) {
+        document.getElementById('add-component-btn').click();
+        var groups = additionalComponents.querySelectorAll('.component-group');
+        var lastGroup = groups[groups.length - 1];
+        var typeSelect = lastGroup.querySelector('.component-type');
+        typeSelect.value = type;
+        typeSelect.dispatchEvent(new Event('change'));
+        if (sizeValue) {
+            var sizeSelect = lastGroup.querySelector('select[name$="_size[]"]');
+            if (sizeSelect) {
+                selectByValue(sizeSelect, sizeValue);
+            }
+        }
+    }
+
+    function clearAdditionalComponents() {
+        additionalComponents.innerHTML = '';
+    }
+
+    var presets = {
+        standard: {
+            kick: "22x18", rack: "10x7", floor: "16x16",
+            additional: [
+                {type: "rack_tom", size: "12x8"}
+            ]
+        },
+        jazz: {
+            kick: "18x14", rack: "12x8", floor: "14x14",
+            additional: []
+        },
+        classic_rock: {
+            kick: "22x16", rack: "13x9", floor: "16x16",
+            additional: []
+        },
+        gospel: {
+            kick: "22x18", rack: "10x7", floor: "16x16",
+            additional: [
+                {type: "rack_tom", size: "12x8"},
+                {type: "rack_tom", size: "13x9"}
+            ]
+        },
+        metal: {
+            kick: "22x18", rack: "12x9", floor: "18x16",
+            additional: [
+                {type: "kick"},
+                {type: "rack_tom", size: "10x8"},
+                {type: "floor_tom", size: "16x16"}
+            ]
+        },
+        fusion: {
+            kick: "22x16", rack: "10x7", floor: "14x14",
+            additional: [
+                {type: "rack_tom", size: "12x8"},
+                {type: "floor_tom", size: "16x16"}
+            ]
+        },
+        zep: {
+            kick: "24x14", rack: "14x11", floor: "16x16",
+            additional: [
+                {type: "floor_tom", size: "18x16"}
+            ]
+        },
+        star60s: {
+            kick: "20x16", rack: "13x9", floor: "16x16",
+            additional: []
+        },
+        bigband: {
+            kick: "22x16", rack: "13x9", floor: "14x14",
+            additional: [
+                {type: "rack_tom", size: "12x8"},
+                {type: "floor_tom", size: "16x16"}
+            ]
+        },
+        modernpop: {
+            kick: "20x16", rack: "10x7", floor: "14x14",
+            additional: [
+                {type: "rack_tom", size: "12x8"}
+            ]
+        }
+    };
+
+    function fallbackKick(size) {
+        var allowed = ["18x14","20x16","20x18","22x16","22x18","24x14","24x18"];
+        if (allowed.includes(size)) return size;
+        if (size === "26x14") return "24x14";
+        if (size === "20x14") return "20x16";
+        return allowed[0];
+    }
+
+    // Track last applied preset and values
+    var lastPreset = "custom";
+    var lastPresetValues = {};
+    var isApplyingPreset = false;
+
+    function applyPreset(val) {
+        var preset = presets[val];
+        if (!preset) return;
+        isApplyingPreset = true;
+        selectByValue(kick, fallbackKick(preset.kick));
+        selectByValue(rack, preset.rack);
+        selectByValue(floor, preset.floor);
+        clearAdditionalComponents();
+        if (preset.additional && preset.additional.length > 0) {
+            preset.additional.forEach(function(comp) {
+                if (comp.type === "kick") {
+                    addComponent("kick");
+                } else {
+                    addComponent(comp.type, comp.size);
+                }
+            });
+        }
+        updateKickOptionAvailability();
+        lastPreset = val;
+        lastPresetValues = {
+            kick: fallbackKick(preset.kick),
+            rack: preset.rack,
+            floor: preset.floor,
+            additional: (preset.additional || []).map(function(comp) {
+                return {type: comp.type, size: comp.size || null};
+            })
+        };
+        // Delay resetting isApplyingPreset to avoid race with change events
+        setTimeout(function() { isApplyingPreset = false; }, 0);
+    }
+
+    presetSelect.addEventListener('change', function() {
+        var val = presetSelect.value;
+        if (val === "custom") return;
+        applyPreset(val);
+    });
+
+    // If user changes any main drum size, set preset to custom if not matching last preset
+    [kick, rack, floor].forEach(function(sel, idx) {
+        sel.addEventListener('change', function() {
+            if (isApplyingPreset) return;
+            if (presetSelect.value === "custom") return;
+            var mismatch = false;
+            if (lastPresetValues.kick && kick.value !== lastPresetValues.kick) mismatch = true;
+            if (lastPresetValues.rack && rack.value !== lastPresetValues.rack) mismatch = true;
+            if (lastPresetValues.floor && floor.value !== lastPresetValues.floor) mismatch = true;
+            if (mismatch) {
+                presetSelect.value = "custom";
+            }
+        });
+    });
+
+    // If user changes additional components, set to custom if not matching last preset
+    var observer = new MutationObserver(function() {
+        if (isApplyingPreset) return;
+        if (presetSelect.value === "custom") return;
+        var groups = additionalComponents.querySelectorAll('.component-group');
+        var current = [];
+        groups.forEach(function(group) {
+            var type = group.querySelector('.component-type').value;
+            var sizeSel = group.querySelector('select[name$="_size[]"]');
+            var size = sizeSel ? sizeSel.value : null;
+            current.push({type: type, size: size});
+        });
+        var presetAdd = lastPresetValues.additional || [];
+        if (current.length !== presetAdd.length) {
+            presetSelect.value = "custom";
+            return;
+        }
+        for (var i = 0; i < current.length; i++) {
+            if (current[i].type !== presetAdd[i].type) {
+                presetSelect.value = "custom";
+                return;
+            }
+            if (presetAdd[i].size && current[i].size !== presetAdd[i].size) {
+                presetSelect.value = "custom";
+                return;
+            }
+        }
+    });
+    observer.observe(document.getElementById('additional-components'), {childList: true, subtree: true});
+
+    document.getElementById('additional-components').addEventListener('change', function(e) {
+        if (isApplyingPreset) return;
+        if (presetSelect.value === "custom") return;
+        observer.takeRecords();
+    });
+
+})();
+
+// Simple JS for dynamic component addition
+const componentOptions = `
+    <div class="mb-3 component-group">
+        <label>Component Type</label>
+        <select class="form-select component-type" name="component_type[]">
+            <option value="kick">Kick (same size) (+$250)</option>
+            <option value="rack_tom">Rack Tom (+$120)</option>
+            <option value="floor_tom">Floor Tom (+$150)</option>
+            <option value="snare">Matching Snare (+$180)</option>
+            <option value="pancake">Pancake Drum (+$100)</option>
+            <option value="rocket_tom">Rocket Tom Set (6x10,6x12,6x15,6x18) (+$300)</option>
+            <option value="gong">Gong Drum (+$200)</option>
+        </select>
+        <div class="component-fields mt-2"></div>
+        <button type="button" class="btn btn-danger btn-sm remove-component mt-2">Remove</button>
+    </div>
+`;
+
+function updateKickOptionAvailability() {
+    // Disable "Kick" option if already present
+    var groups = document.querySelectorAll('.component-group');
+    var kickCount = 0;
+    groups.forEach(function(group) {
+        var sel = group.querySelector('.component-type');
+        if (sel && sel.value === 'kick') kickCount++;
+    });
+    // For all dropdowns, disable/enable "Kick" option accordingly
+    document.querySelectorAll('.component-type').forEach(function(sel) {
+        var kickOpt = sel.querySelector('option[value="kick"]');
+        if (kickOpt) {
+            if (kickCount >= 1 && sel.value !== 'kick') {
+                kickOpt.disabled = true;
+            } else {
+                kickOpt.disabled = false;
+            }
+        }
+    });
+}
+
+document.getElementById('add-component-btn').addEventListener('click', function() {
+    const container = document.getElementById('additional-components');
+    const div = document.createElement('div');
+    div.innerHTML = componentOptions;
+    container.appendChild(div);
+
+    // Add event listeners for dynamic fields
+    div.querySelector('.component-type').addEventListener('change', function(e) {
+        const fieldsDiv = div.querySelector('.component-fields');
+        const type = e.target.value;
+        let fields = '';
+        if (type === 'rack_tom') {
+            fields = `
+                <label>Size (Diameter x Depth)</label>
+                <select name="rack_tom_size[]" class="form-select" required>
+                    <option value="" selected disabled hidden>Select Rack Tom Size</option>
+                    <option value="8x7">8x7</option>
+                    <option value="10x7">10x7</option>
+                    <option value="10x8">10x8</option>
+                    <option value="12x8">12x8</option>
+                    <option value="12x9">12x9</option>
+                    <option value="13x9">13x9</option>
+                    <option value="13x10">13x10</option>
+                    <option value="14x11">14x11</option>
+                </select>
+            `;
+        } else if (type === 'floor_tom') {
+            fields = `
+                <label>Size (Diameter x Depth)</label>
+                <select name="floor_tom_size[]" class="form-select" required>
+                    <option value="" selected disabled hidden>Select Floor Tom Size</option>
+                    <option value="14x12">14x12</option>
+                    <option value="14x14">14x14</option>
+                    <option value="16x14">16x14</option>
+                    <option value="16x16">16x16</option>
+                    <option value="18x16">18x16</option>
+                </select>
+            `;
+        } else if (type === 'snare') {
+            fields = `
+                <label>Size (Diameter x Depth)</label>
+                <select name="snare_size[]" class="form-select" required>
+                    <option value="" selected disabled hidden>Select Snare Size</option>
+                    <option value="14x5.5">14x5.5</option>
+                    <option value="14x6.5">14x6.5</option>
+                    <option value="14x8">14x8</option>
+                </select>
+            `;
+        } else if (type === 'pancake') {
+            fields = `
+                <label>Size (Diameter x Depth)</label>
+                <select name="pancake_size[]" class="form-select" required>
+                    <option value="" selected disabled hidden>Select Pancake Size</option>
+                    <option value="20x2.5">20x2.5</option>
+                    <option value="20x4">20x4</option>
+                    <option value="22x6">22x6</option>
+                </select>
+            `;
+        } else if (type === 'gong') {
+            fields = `
+                <label>Size (Diameter x Depth)</label>
+                <select name="gong_size[]" class="form-select" required>
+                    <option value="" selected disabled hidden>Select Gong Size</option>
+                    <option value="18x16">18x16</option>
+                    <option value="20x14">20x14</option>
+                </select>
+            `;
+        } else {
+            fields = `<div class="text-muted">No additional fields required.</div>`;
+        }
+        fieldsDiv.innerHTML = fields;
+        updateKickOptionAvailability();
+    });
+
+    // Remove component
+    div.querySelector('.remove-component').addEventListener('click', function() {
+        div.remove();
+        updateKickOptionAvailability();
+    });
+
+    // Initial update for kick option
+    updateKickOptionAvailability();
+});
+
+// Initial update for kick option on page load
+updateKickOptionAvailability();
+
+// --- Pricing Logic ---
+const DRUM_BASE_PRICE = 700;
+const DRUM_COMPONENT_PRICES = {
+    'kick': 250,
+    'rack_tom': 120,
+    'floor_tom': 150,
+    'snare': 180,
+    'pancake': 100,
+    'rocket_tom': 300,
+    'gong': 200
+};
+const DRUM_FINISH_UPCHARGE = {
+    'Candy Apple Red': 50,
+    'Blue Burst Fade': 40,
+    'Purple Fade': 40,
+    'Orange Sparkle': 40,
+    'Green Sparkle': 40,
+    'Sparkling Blue': 40,
+    'Purple Sparkle': 40,
+    'Black Pearl': 30,
+    'White Pearl': 30,
+    'Black Oyster': 30,
+    'Blue Oyster': 30
+};
+const DRUM_HARDWARE_UPCHARGE = {
+    'Gold': 80,
+    'Black': 40
+};
+
+function getDrumSubtotal() {
+    let subtotal = DRUM_BASE_PRICE;
+    // Finish upcharge
+    const finish = document.getElementById('finish_input').value;
+    if (DRUM_FINISH_UPCHARGE[finish]) subtotal += DRUM_FINISH_UPCHARGE[finish];
+    // Hardware color upcharge
+    const hardware = document.getElementById('hardware_color_input').value;
+    if (DRUM_HARDWARE_UPCHARGE[hardware]) subtotal += DRUM_HARDWARE_UPCHARGE[hardware];
+    // Additional components
+    const groups = document.querySelectorAll('.component-group');
+    groups.forEach(group => {
+        const type = group.querySelector('.component-type').value;
+        if (type === 'rocket_tom') {
+            subtotal += DRUM_COMPONENT_PRICES['rocket_tom'];
+        } else if (DRUM_COMPONENT_PRICES[type]) {
+            subtotal += DRUM_COMPONENT_PRICES[type];
+        }
+    });
+    return subtotal;
+}
+
+function updateDrumPriceQuote() {
+    const subtotal = getDrumSubtotal();
+    document.getElementById('price-quote').textContent = `Subtotal: $${subtotal}`;
+}
+
+// Update price on all relevant changes
+if (document.getElementById('drum-builder-form')) {
+    document.getElementById('drum-builder-form').addEventListener('change', updateDrumPriceQuote);
+}
+if (document.getElementById('additional-components')) {
+    document.getElementById('additional-components').addEventListener('DOMSubtreeModified', updateDrumPriceQuote);
+}
+if (document.getElementById('finish_swatches')) {
+    document.getElementById('finish_swatches').addEventListener('click', function(e) {
+        setTimeout(updateDrumPriceQuote, 10);
+    });
+}
+if (document.getElementById('hardware_color_swatches')) {
+    document.getElementById('hardware_color_swatches').addEventListener('click', function(e) {
+        setTimeout(updateDrumPriceQuote, 10);
+    });
+}
+if (document.getElementById('add-component-btn')) {
+    document.getElementById('add-component-btn').addEventListener('click', function() {
+        setTimeout(updateDrumPriceQuote, 100);
+    });
+}
+// Initial price
+updateDrumPriceQuote();
+</script>
+<style>
+.swatch {
+    margin: 0 8px 8px 0;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    display: inline-block;
+    transition: border 0.2s;
+}
+.swatch.selected {
+    border: 2px solid #198754;
+}
+
+.place-order-btn {
+    background: transparent !important;
+    border: none !important;
+    color: #b98c5e !important; 
+    font-size: 20px !important;
+    font-weight: bold;
+    padding: 0;
+    box-shadow: none !important;
+    outline: none !important;
+    transition: color 0.2s;
+}
+.place-order-btn:hover, .place-order-btn:focus {
+    color: #e6c77c !important; 
+    text-decoration: underline;
+    background: transparent !important;
+}
+</style>
+{% endblock %}

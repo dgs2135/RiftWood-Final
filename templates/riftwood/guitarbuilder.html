@@ -1,0 +1,781 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title mb-4 text-center">Design Your Custom Guitar</h2>
+                    <form method="post" class="mb-4" id="guitarbuilder-form" autocomplete="off">
+                        {% csrf_token %}
+                        <div id="form-error-message" class="alert alert-danger" style="display:none;"></div>
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Orientation</label>
+                            <select name="orientation" class="form-select" required>
+                                <option value="" selected disabled hidden>Select Orientation</option>
+                                <option value="Right-handed">Right-handed</option>
+                                <option value="Left-handed">Left-handed</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Body</label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Body Shape</label>
+                                    <select name="body_shape" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Body Shape</option>
+                                        <option value="S-Shape" data-img="{% static 'images/guitar_specs/S-Shape.svg' %}" data-desc="Based on the Stratocaster* shape.">S-Shape</option>
+                                        <option value="SS-Shape" data-img="{% static 'images/guitar_specs/SS-Shape.svg' %}" data-desc="Based on the Superstrat* shape.">SS-Shape</option>
+                                        <option value="T-Shape" data-img="{% static 'images/guitar_specs/T-Shape.svg' %}" data-desc="Based on the Telecaster* shape.">T-Shape</option>
+                                        <option value="LP-Shape" data-img="{% static 'images/guitar_specs/LP-Shape.svg' %}" data-desc="Les Paul*-style single cutaway.">LP-Shape</option>
+                                        <option value="DC-Shape" data-img="{% static 'images/guitar_specs/DC-Shape.svg' %}" data-desc="SG*-inspired double cutaway.">DC-Shape</option>
+                                        <option value="J-Shape" data-img="{% static 'images/guitar_specs/J-Shape.svg' %}" data-desc="Offset Jaguar/Jazzmaster*-style shape.">J-Shape</option>
+                                        <option value="FB-Shape" data-img="{% static 'images/guitar_specs/FB-Shape.svg' %}" data-desc="Firebird* inspired.">FB-Shape</option>
+                                    </select>
+                                    <div class="d-flex align-items-center mt-2">
+                                        <img id="body_shape_img" src="" alt="Body Shape Swatch" class="img-thumbnail me-2" style="display:none;max-width:100px;">
+                                        <span id="body_shape_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Body Wood Type</label>
+                                    <select name="body_wood" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Body Wood</option>
+                                        <option value="Maple" data-desc="Bright tone, strong grain.">Maple</option>
+                                        <option value="Alder" data-desc="Balanced, full sound.">Alder</option>
+                                        <option value="Ash" data-desc="Resonant, pronounced grain.">Ash</option>
+                                        <option value="Mahogany" data-desc="Warm, rich tone.">Mahogany</option>
+                                        <option value="Basswood" data-desc="Lightweight, soft mids.">Basswood</option>
+                                        <option value="Korina" data-desc="Vintage, balanced.">Korina</option>
+                                    </select>
+                                    <div class="mt-2">
+                                        <span id="body_wood_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Finish & Pickguard</label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Finish</label>
+                                    <div class="d-flex flex-wrap align-items-center" id="finish_swatches">
+                                        <!-- Swatches -->
+                                        <div class="swatch" data-value="Aged White" data-img="{% static 'images/finishes/aged white.png' %}" data-desc="Aged White" title="Aged White">
+                                            <img src="{% static 'images/finishes/aged white.png' %}" alt="Aged White" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Aqua" data-img="{% static 'images/finishes/aqua.png' %}" data-desc="Aqua" title="Aqua">
+                                            <img src="{% static 'images/finishes/aqua.png' %}" alt="Aqua" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Black" data-img="{% static 'images/finishes/black.png' %}" data-desc="Black" title="Black">
+                                            <img src="{% static 'images/finishes/black.png' %}" alt="Black" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Blue Burst" data-img="{% static 'images/finishes/blue burst.png' %}" data-desc="Blue Burst" title="Blue Burst">
+                                            <img src="{% static 'images/finishes/blue burst.png' %}" alt="Blue Burst" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Cherry Red" data-img="{% static 'images/finishes/cherry red.png' %}" data-desc="Cherry Red" title="Cherry Red">
+                                            <img src="{% static 'images/finishes/cherry red.png' %}" alt="Cherry Red" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Cherry Sunburst" data-img="{% static 'images/finishes/cherry sunburst.png' %}" data-desc="Cherry Sunburst" title="Cherry Sunburst">
+                                            <img src="{% static 'images/finishes/cherry sunburst.png' %}" alt="Cherry Sunburst" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Gold" data-img="{% static 'images/finishes/gold.png' %}" data-desc="Gold" title="Gold">
+                                            <img src="{% static 'images/finishes/gold.png' %}" alt="Gold" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Green Burst" data-img="{% static 'images/finishes/green burst.png' %}" data-desc="Green Burst" title="Green Burst">
+                                            <img src="{% static 'images/finishes/green burst.png' %}" alt="Green Burst" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Metallic Purple" data-img="{% static 'images/finishes/metallic purple.png' %}" data-desc="Metallic Purple" title="Metallic Purple">
+                                            <img src="{% static 'images/finishes/metallic purple.png' %}" alt="Metallic Purple" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Natural" data-img="{% static 'images/finishes/natural.png' %}" data-desc="Natural" title="Natural">
+                                            <img src="{% static 'images/finishes/natural.png' %}" alt="Natural" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Pelham Blue" data-img="{% static 'images/finishes/pelham blue.png' %}" data-desc="Pelham Blue (+$30)" title="Pelham Blue (+$30)">
+                                            <img src="{% static 'images/finishes/pelham blue.png' %}" alt="Pelham Blue" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Pink" data-img="{% static 'images/finishes/pink.png' %}" data-desc="Pink (+$20)" title="Pink (+$20)">
+                                            <img src="{% static 'images/finishes/pink.png' %}" alt="Pink" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Purple Burst" data-img="{% static 'images/finishes/purple burst.png' %}" data-desc="Purple Burst (+$30)" title="Purple Burst (+$30)">
+                                            <img src="{% static 'images/finishes/purple burst.png' %}" alt="Purple Burst" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Sparkling Blue" data-img="{% static 'images/finishes/sparkling blue.png' %}" data-desc="Sparkling Blue" title="Sparkling Blue">
+                                            <img src="{% static 'images/finishes/sparkling blue.png' %}" alt="Sparkling Blue" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Surf Green" data-img="{% static 'images/finishes/surf green.png' %}" data-desc="Surf Green" title="Surf Green">
+                                            <img src="{% static 'images/finishes/surf green.png' %}" alt="Surf Green" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Tobacco Burst" data-img="{% static 'images/finishes/tobacco burst.png' %}" data-desc="Tobacco Burst" title="Tobacco Burst">
+                                            <img src="{% static 'images/finishes/tobacco burst.png' %}" alt="Tobacco Burst" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="TV Yellow" data-img="{% static 'images/finishes/tv yellow.png' %}" data-desc="TV Yellow" title="TV Yellow">
+                                            <img src="{% static 'images/finishes/tv yellow.png' %}" alt="TV Yellow" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="White" data-img="{% static 'images/finishes/white.png' %}" data-desc="White" title="White">
+                                            <img src="{% static 'images/finishes/white.png' %}" alt="White" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="finish" id="finish_input" required>
+                                    <div class="d-flex align-items-center mt-2">
+                                        <img id="finish_img" src="" alt="Finish Swatch" class="img-thumbnail me-2" style="display:none;max-width:60px;">
+                                        <span id="finish_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Pickguard (Optional)</label>
+                                    <div class="d-flex flex-wrap align-items-center" id="pickguard_swatches">
+                                        <div class="swatch" data-value="None" data-img="" data-desc="No Pickguard" title="None">
+                                            <div style="width:40px;height:40px;border:1px solid #ccc;display:flex;align-items:center;justify-content:center;">None</div>
+                                        </div>
+                                        <div class="swatch" data-value="White" data-img="{% static 'images/pickguard_colors/white.png' %}" data-desc="White" title="White">
+                                            <img src="{% static 'images/pickguard_colors/white.png' %}" alt="White" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Aged White" data-img="{% static 'images/pickguard_colors/aged white.png' %}" data-desc="Aged White" title="Aged White">
+                                            <img src="{% static 'images/pickguard_colors/aged white.png' %}" alt="Aged White" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Black" data-img="{% static 'images/pickguard_colors/black.png' %}" data-desc="Black" title="Black">
+                                            <img src="{% static 'images/pickguard_colors/black.png' %}" alt="Black" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="White Pearl" data-img="{% static 'images/pickguard_colors/white pearl.png' %}" data-desc="White Pearl" title="White Pearl">
+                                            <img src="{% static 'images/pickguard_colors/white pearl.png' %}" alt="White Pearl" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Tortoiseshell" data-img="{% static 'images/pickguard_colors/tortoiseshell.png' %}" data-desc="Tortoiseshell" title="Tortoiseshell">
+                                            <img src="{% static 'images/pickguard_colors/tortoiseshell.png' %}" alt="Tortoiseshell" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Black Pearl" data-img="{% static 'images/pickguard_colors/black pearl.png' %}" data-desc="Black Pearl" title="Black Pearl">
+                                            <img src="{% static 'images/pickguard_colors/black pearl.png' %}" alt="Black Pearl" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="pickguard" id="pickguard_input">
+                                    <div class="d-flex align-items-center mt-2">
+                                        <img id="pickguard_img" src="" alt="Pickguard Swatch" class="img-thumbnail me-2" style="display:none;max-width:60px;">
+                                        <span id="pickguard_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Pickups</label>
+                            <!-- Preset selector for pickup layouts (not a spec, just manipulates the choices) -->
+                            <div class="mb-3">
+                                <label class="form-label">Pickup Preset (Optional)</label>
+                                <select class="form-select" id="pickup-preset-select">
+                                    <option value="custom" selected>Custom</option>
+                                    <option value="classic_sss">Classic S-Style (SSS)</option>
+                                    <option value="classic_ts">Classic T-Style (SS)</option>
+                                    <option value="70s_ts">70s T-Style (SH)</option>
+                                    <option value="nashville_ts">Nashville T-Style (SSS)</option>
+                                    <option value="classic_hh">Classic LP/DC-Style (HH)</option>
+                                    <option value="junior_p90">Jr. LP/DC-style (1x P-90)</option>
+                                    <option value="modern_hss">Modern HSS</option>
+                                    <option value="modern_hsh">Modern HSH</option>
+                                    <option value="modern_hh">Modern HH</option>
+                                </select>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Bridge Pickup <span class="text-danger">*</span></label>
+                                    <select name="bridge_pickup" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Bridge Pickup</option>
+                                        <option value="S-Style Single Coil" data-img="{% static 'images/guitar_specs/S-Style single coil.png' %}" data-desc="Bright, clear single coil.">S-Style Single Coil</option>
+                                        <option value="T-Style Single Coil" data-img="{% static 'images/guitar_specs/t-style single coil (bridge).png' %}" data-desc="Twangy, classic tone.">T-Style Single Coil</option>
+                                        <option value="J-Style Single Coil" data-img="{% static 'images/guitar_specs/j-style single coil.png' %}" data-desc="Punchy, focused.">J-Style Single Coil</option>
+                                        <option value="Lipstick Tube Single Coil" data-img="{% static 'images/guitar_specs/lipstick tube single coil.png' %}" data-desc="Glassier, vintage.">Lipstick Tube Single Coil</option>
+                                        <option value="P-90 Soap Bar" data-img="{% static 'images/guitar_specs/p-90 soap bar.png' %}" data-desc="Fat, gritty single coil.">P-90 Soap Bar</option>
+                                        <option value="Filtertron Humbucker" data-img="{% static 'images/guitar_specs/filtertron humbucker.png' %}" data-desc="Bright, low-output humbucker.">Filtertron Humbucker</option>
+                                        <option value="Vintage PAF Humbucker" data-img="{% static 'images/guitar_specs/vintage paf humbucker.png' %}" data-desc="Warm, classic humbucker.">Vintage PAF Humbucker</option>
+                                        <option value="Mini-Humbucker" data-img="{% static 'images/guitar_specs/minihumbucker.png' %}" data-desc="Tighter, brighter humbucker.">Mini-Humbucker</option>
+                                        <option value="Wide Range Humbucker" data-img="{% static 'images/guitar_specs/wide range humbucker.png' %}" data-desc="Full, articulate.">Wide Range Humbucker</option>
+                                        <option value="High Output Humbucker" data-img="{% static 'images/guitar_specs/high output humbucker.png' %}" data-desc="Aggressive, modern.">High Output Humbucker</option>
+                                    </select>
+                                    <div class="d-flex align-items-center mt-2">
+                                        <img id="bridge_pickup_img" src="" alt="Pickup Swatch" class="img-thumbnail me-2 pickup-square-img" style="display:none;width:80px;height:80px;object-fit:contain;">
+                                        <span id="bridge_pickup_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Middle Pickup (Optional)</label>
+                                    <select name="middle_pickup" class="form-select">
+                                        <option value="" selected disabled hidden>Select Middle Pickup</option>
+                                        <option value="None" data-img="" data-desc="">None</option>
+                                        <option value="S-Style Single Coil" data-img="{% static 'images/guitar_specs/S-Style single coil.png' %}" data-desc="Bright, clear single coil.">S-Style Single Coil</option>
+                                        <option value="T-Style Single Coil" data-img="{% static 'images/guitar_specs/t-style single coil.png' %}" data-desc="Twangy, classic tone.">T-Style Single Coil</option>
+                                        <option value="J-Style Single Coil" data-img="{% static 'images/guitar_specs/j-style single coil.png' %}" data-desc="Punchy, focused.">J-Style Single Coil</option>
+                                        <option value="Lipstick Tube Single Coil" data-img="{% static 'images/guitar_specs/lipstick tube single coil.png' %}" data-desc="Glassier, vintage.">Lipstick Tube Single Coil</option>
+                                        <option value="P-90 Soap Bar" data-img="{% static 'images/guitar_specs/p-90 soap bar.png' %}" data-desc="Fat, gritty single coil.">P-90 Soap Bar</option>
+                                        <option value="Filtertron Humbucker" data-img="{% static 'images/guitar_specs/filtertron humbucker.png' %}" data-desc="Bright, low-output humbucker.">Filtertron Humbucker</option>
+                                        <option value="Vintage PAF Humbucker" data-img="{% static 'images/guitar_specs/vintage paf humbucker.png' %}" data-desc="Warm, classic humbucker.">Vintage PAF Humbucker</option>
+                                        <option value="Mini-Humbucker" data-img="{% static 'images/guitar_specs/minihumbucker.png' %}" data-desc="Tighter, brighter humbucker.">Mini-Humbucker</option>
+                                        <option value="Wide Range Humbucker" data-img="{% static 'images/guitar_specs/wide range humbucker.png' %}" data-desc="Full, articulate.">Wide Range Humbucker</option>
+                                        <option value="High Output Humbucker" data-img="{% static 'images/guitar_specs/high output humbucker.png' %}" data-desc="Aggressive, modern.">High Output Humbucker</option>
+                                    </select>
+                                    <div class="d-flex align-items-center mt-2">
+                                        <img id="middle_pickup_img" src="" alt="Pickup Swatch" class="img-thumbnail me-2 pickup-square-img" style="display:none;width:80px;height:80px;object-fit:contain;">
+                                        <span id="middle_pickup_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Neck Pickup (Optional)</label>
+                                    <select name="neck_pickup" class="form-select">
+                                        <option value="" selected disabled hidden>Select Neck Pickup</option>
+                                        <option value="None" data-img="" data-desc="">None</option>
+                                        <option value="S-Style Single Coil" data-img="{% static 'images/guitar_specs/S-Style single coil.png' %}" data-desc="Bright, clear single coil.">S-Style Single Coil</option>
+                                        <option value="T-Style Single Coil" data-img="{% static 'images/guitar_specs/t-style single coil.png' %}" data-desc="Twangy, classic tone.">T-Style Single Coil</option>
+                                        <option value="J-Style Single Coil" data-img="{% static 'images/guitar_specs/j-style single coil.png' %}" data-desc="Punchy, focused.">J-Style Single Coil</option>
+                                        <option value="Lipstick Tube Single Coil" data-img="{% static 'images/guitar_specs/lipstick tube single coil.png' %}" data-desc="Glassier, vintage.">Lipstick Tube Single Coil</option>
+                                        <option value="P-90 Soap Bar" data-img="{% static 'images/guitar_specs/p-90 soap bar.png' %}" data-desc="Fat, gritty single coil.">P-90 Soap Bar</option>
+                                        <option value="Filtertron Humbucker" data-img="{% static 'images/guitar_specs/filtertron humbucker.png' %}" data-desc="Bright, low-output humbucker.">Filtertron Humbucker</option>
+                                        <option value="Vintage PAF Humbucker" data-img="{% static 'images/guitar_specs/vintage paf humbucker.png' %}" data-desc="Warm, classic humbucker.">Vintage PAF Humbucker</option>
+                                        <option value="Mini-Humbucker" data-img="{% static 'images/guitar_specs/minihumbucker.png' %}" data-desc="Tighter, brighter humbucker.">Mini-Humbucker</option>
+                                        <option value="Wide Range Humbucker" data-img="{% static 'images/guitar_specs/wide range humbucker.png' %}" data-desc="Full, articulate.">Wide Range Humbucker</option>
+                                        <option value="High Output Humbucker" data-img="{% static 'images/guitar_specs/high output humbucker.png' %}" data-desc="Aggressive, modern.">High Output Humbucker</option>
+                                    </select>
+                                    <div class="d-flex align-items-center mt-2">
+                                        <img id="neck_pickup_img" src="" alt="Pickup Swatch" class="img-thumbnail me-2 pickup-square-img" style="display:none;width:80px;height:80px;object-fit:contain;">
+                                        <span id="neck_pickup_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Neck</label>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Neck Shape</label>
+                                    <select name="neck_shape" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Neck Shape</option>
+                                        <option value="C-Shape">C-Shape</option>
+                                        <option value="D-Shape">D-Shape</option>
+                                        <option value="U-Shape">U-Shape</option>
+                                        <option value="V-Shape">V-Shape</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Neck Wood Type</label>
+                                    <select name="neck_wood" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Neck Wood</option>
+                                        <option value="Maple">Maple</option>
+                                        <option value="Alder">Alder</option>
+                                        <option value="Ash">Ash</option>
+                                        <option value="Mahogany">Mahogany</option>
+                                        <option value="Spruce">Spruce</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Fingerboard Wood Type</label>
+                                    <select name="fingerboard_wood" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Fingerboard Wood</option>
+                                        <option value="Maple">Maple</option>
+                                        <option value="Rosewood">Rosewood</option>
+                                        <option value="Ebony">Ebony</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Scale & Frets</label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Scale Length</label>
+                                    <select name="scale_length" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Scale Length</option>
+                                        <option value="25.5”">25.5”</option>
+                                        <option value="24.75”">24.75”</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Fret Number</label>
+                                    <select name="fret_number" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Fret Number</option>
+                                        <option value="22">22</option>
+                                        <option value="23">23</option>
+                                        <option value="24">24</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Bridge & Hardware</label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Bridge</label>
+                                    <select name="bridge" class="form-select" required>
+                                        <option value="" selected disabled hidden>Select Bridge</option>
+                                        <option value="Direct String-Through" data-img="" data-desc="Strings go through the body for increased sustain.">Direct String-Through</option>
+                                        <option value="Hard-Tail" data-img="{% static 'images/guitar_specs/Hardtail Bridge.png' %}" data-desc="Fixed bridge for tuning stability and sustain.">Hard-Tail</option>
+                                        <option value="T-Style Bridge" data-img="{% static 'images/guitar_specs/T-Style Bridge.png' %}" data-desc="Classic Tele-style bridge with integrated pickup mount.">T-Style Bridge</option>
+                                        <option value="Stop-Tail" data-img="{% static 'images/guitar_specs/Stop-Tail.png' %}" data-desc="Tune-o-matic style with separate tailpiece for classic feel.">Stop-Tail</option>
+                                        <option value="Bigsby" data-img="{% static 'images/guitar_specs/Bigsby.png' %}" data-desc="Vintage-style vibrato for subtle pitch effects.">Bigsby</option>
+                                        <option value="Synchronized Tremolo" data-img="{% static 'images/guitar_specs/Sync Tremolo.png' %}" data-desc="Strat-style tremolo for expressive pitch bends.">Synchronized Tremolo</option>
+                                        <option value="Double Locking Tremolo" data-img="{% static 'images/guitar_specs/Double Locking.png' %}" data-desc="Floyd Rose-style for extreme pitch effects and tuning stability.">Double Locking Tremolo</option>
+                                    </select>
+                                    <div class="d-flex align-items-center mt-2">
+                                        <img id="bridge_img" src="" alt="Bridge Swatch" class="img-thumbnail me-2 bridge-square-img" style="display:none;width:80px;height:100px;object-fit:contain;">
+                                        <span id="bridge_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Hardware Color</label>
+                                    <div class="d-flex flex-wrap align-items-center" id="hardware_color_swatches">
+                                        <div class="swatch" data-value="Chrome" data-img="{% static 'images/hardware_colors/chrome.png' %}" data-desc="Chrome hardware" title="Chrome">
+                                            <img src="{% static 'images/hardware_colors/chrome.png' %}" alt="Chrome" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Gold" data-img="{% static 'images/hardware_colors/gold.png' %}" data-desc="Gold hardware (+$60)" title="Gold">
+                                            <img src="{% static 'images/hardware_colors/gold.png' %}" alt="Gold" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                        <div class="swatch" data-value="Black" data-img="{% static 'images/hardware_colors/black.png' %}" data-desc="Black hardware (+$30)" title="Black">
+                                            <img src="{% static 'images/hardware_colors/black.png' %}" alt="Black" class="img-thumbnail" style="max-width:40px;">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="hardware_color" id="hardware_color_input" required>
+                                    <div class="d-flex align-items-center mt-2">
+                                        <img id="hardware_color_img" src="" alt="Hardware Swatch" class="img-thumbnail me-2" style="display:none;max-width:60px;">
+                                        <span id="hardware_color_desc" class="text-muted"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Add-ons (Optional)</label>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="F-Hole" id="addon1">
+                                        <label class="form-check-label" for="addon1">F-Hole (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Scalloped Fretboard" id="addon2">
+                                        <label class="form-check-label" for="addon2">Scalloped Fretboard (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Neck Heel Contour" id="addon3">
+                                        <label class="form-check-label" for="addon3">Neck Heel Contour (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Locking Tuners" id="addon4">
+                                        <label class="form-check-label" for="addon4">Locking Tuners (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Killswitch" id="addon5">
+                                        <label class="form-check-label" for="addon5">Killswitch (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Treble Bleed" id="addon6">
+                                        <label class="form-check-label" for="addon6">Treble Bleed (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Volume/Tone Bypass" id="addon7">
+                                        <label class="form-check-label" for="addon7">Volume/Tone Bypass (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Piezo Pickup" id="addon8">
+                                        <label class="form-check-label" for="addon8">Piezo Pickup (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Coil Splitting" id="addon9">
+                                        <label class="form-check-label" for="addon9">Coil Splitting (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Series/Parallel Switching" id="addon10">
+                                        <label class="form-check-label" for="addon10">Series/Parallel Switching (+$25)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="addons" value="Phase Switching" id="addon11">
+                                        <label class="form-check-label" for="addon11">Phase Switching (+$25)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Additional Requests (Optional)</label>
+                            <textarea name="additional_requests" class="form-control"></textarea>
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <h4 id="price-quote" class="fw-bold text-success">Subtotal: $500</h4>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn place-order-btn" id="place-order-btn">Place Order</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+document.getElementById('guitarbuilder-form').addEventListener('submit', function(e) {
+    var isAuthenticated = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
+    if (!isAuthenticated) {
+        e.preventDefault();
+        window.location.href = "{% url 'login' %}?next={% url 'guitarbuilder' %}";
+        return;
+    }
+    var form = this;
+    var errorDiv = document.getElementById('form-error-message');
+    errorDiv.style.display = 'none';
+    errorDiv.textContent = '';
+
+    // Validate required fields (including hidden swatch fields)
+    var requiredFields = form.querySelectorAll('[required]');
+    var firstInvalid = null;
+    requiredFields.forEach(function(field) {
+        // For hidden swatch fields, check value
+        if (field.offsetParent === null || field.type === 'hidden') {
+            if (!field.value) {
+                if (!firstInvalid) firstInvalid = field;
+                field.classList.add('is-invalid');
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        } else if (!field.value) {
+            if (!firstInvalid) firstInvalid = field;
+            field.classList.add('is-invalid');
+        } else {
+            field.classList.remove('is-invalid');
+        }
+    });
+
+    if (firstInvalid) {
+        e.preventDefault();
+        errorDiv.textContent = "Please fill out all required fields before placing your order.";
+        errorDiv.style.display = '';
+        // Scroll to first invalid field
+        var scrollTo = firstInvalid;
+        // If hidden, scroll to its swatch container
+        if (firstInvalid.type === 'hidden') {
+            var swatchDiv = firstInvalid.previousElementSibling;
+            if (swatchDiv && swatchDiv.classList.contains('d-flex')) {
+                scrollTo = swatchDiv;
+            }
+        }
+        scrollTo.scrollIntoView({behavior: "smooth", block: "center"});
+        return;
+    }
+});
+</script>
+<script>
+function setupSpecPreview(selectName, imgId, descId) {
+    var select = document.getElementsByName(selectName)[0];
+    var img = document.getElementById(imgId);
+    var desc = descId ? document.getElementById(descId) : null;
+    if (!select) return;
+    select.addEventListener('change', function() {
+        var opt = select.options[select.selectedIndex];
+        var imgSrc = opt.getAttribute('data-img');
+        var descText = opt.getAttribute('data-desc');
+        if (imgSrc && img) {
+            img.src = imgSrc;
+            img.style.display = '';
+        } else if (img) {
+            img.style.display = 'none';
+        }
+        if (desc) {
+            desc.textContent = descText ? descText : '';
+        }
+    });
+}
+setupSpecPreview('body_shape', 'body_shape_img', 'body_shape_desc');
+setupSpecPreview('body_wood', 'body_wood_img', 'body_wood_desc');
+setupSpecPreview('bridge_pickup', 'bridge_pickup_img', 'bridge_pickup_desc');
+setupSpecPreview('middle_pickup', 'middle_pickup_img', 'middle_pickup_desc');
+setupSpecPreview('neck_pickup', 'neck_pickup_img', 'neck_pickup_desc');
+setupSpecPreview('pickguard', 'pickguard_img', 'pickguard_desc');
+setupSpecPreview('hardware_color', 'hardware_color_img', 'hardware_color_desc');
+setupSpecPreview('bridge', 'bridge_img', 'bridge_desc'); // Now with desc span for bridge
+</script>
+<style>
+.swatch {
+    margin: 0 8px 8px 0;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    display: inline-block;
+    transition: border 0.2s;
+}
+.swatch.selected {
+    border: 2px solid #198754;
+}
+.bridge-square-img, .pickup-square-img {
+    width: 80px !important;
+    height: 80px !important;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.place-order-btn {
+    background: transparent !important;
+    border: none !important;
+    color: #b98c5e !important; 
+    font-size: 20px !important;
+    font-weight: bold;
+    padding: 0;
+    box-shadow: none !important;
+    outline: none !important;
+    transition: color 0.2s;
+}
+.place-order-btn:hover, .place-order-btn:focus {
+    color: #e6c77c !important; 
+    text-decoration: underline;
+    background: transparent !important;
+}
+</style>
+<script>
+function setupSwatchSelection(containerId, inputId, imgId, descId) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    var input = document.getElementById(inputId);
+    var img = imgId ? document.getElementById(imgId) : null;
+    var desc = descId ? document.getElementById(descId) : null;
+    container.addEventListener('click', function(e) {
+        var swatch = e.target.closest('.swatch');
+        if (!swatch) return;
+        // Remove previous selection
+        Array.from(container.getElementsByClassName('swatch')).forEach(function(s) {
+            s.classList.remove('selected');
+        });
+        swatch.classList.add('selected');
+        // Set hidden input value
+        input.value = swatch.getAttribute('data-value');
+        // Set preview image
+        if (img) {
+            var imgSrc = swatch.getAttribute('data-img');
+            if (imgSrc) {
+                img.src = imgSrc;
+                img.style.display = '';
+            } else {
+                img.style.display = 'none';
+            }
+        }
+        // Set description
+        if (desc) {
+            var descText = swatch.getAttribute('data-desc');
+            desc.textContent = descText ? descText : '';
+        }
+    });
+}
+
+// Setup swatch selection for Finish, Pickguard, Hardware Color
+setupSwatchSelection('finish_swatches', 'finish_input', 'finish_img', 'finish_desc');
+setupSwatchSelection('pickguard_swatches', 'pickguard_input', 'pickguard_img', 'pickguard_desc');
+setupSwatchSelection('hardware_color_swatches', 'hardware_color_input', 'hardware_color_img', 'hardware_color_desc');
+
+setupSpecPreview('body_shape', 'body_shape_img', 'body_shape_desc');
+setupSpecPreview('body_wood', 'body_wood_img', 'body_wood_desc');
+</script>
+<script>
+// Pickup preset logic (does not submit as a spec)
+(function() {
+    var presetSelect = document.getElementById('pickup-preset-select');
+    var bridge = document.getElementsByName('bridge_pickup')[0];
+    var middle = document.getElementsByName('middle_pickup')[0];
+    var neck = document.getElementsByName('neck_pickup')[0];
+
+    // Helper to select by visible text
+    function selectByText(select, text) {
+        for (var i = 0; i < select.options.length; i++) {
+            if (select.options[i].text === text) {
+                select.selectedIndex = i;
+                select.dispatchEvent(new Event('change'));
+                return;
+            }
+        }
+        // fallback to first option if not found
+        select.selectedIndex = 0;
+        select.dispatchEvent(new Event('change'));
+    }
+
+    // Track last preset
+    var lastPreset = "custom";
+    var isPresetChange = false;
+
+    function setPreset(preset) {
+        isPresetChange = true;
+        // Clear all first
+        bridge.selectedIndex = 0; bridge.dispatchEvent(new Event('change'));
+        middle.selectedIndex = 0; middle.dispatchEvent(new Event('change'));
+        neck.selectedIndex = 0; neck.dispatchEvent(new Event('change'));
+
+        switch (preset) {
+            case 'classic_sss':
+                selectByText(bridge, 'S-Style Single Coil');
+                selectByText(middle, 'S-Style Single Coil');
+                selectByText(neck, 'S-Style Single Coil');
+                break;
+            case 'classic_ts':
+                selectByText(bridge, 'T-Style Single Coil');
+                selectByText(middle, 'None');
+                selectByText(neck, 'T-Style Single Coil');
+                break;
+            case '70s_ts':
+                selectByText(bridge, 'T-Style Single Coil');
+                selectByText(middle, 'None');
+                selectByText(neck, 'Wide Range Humbucker');
+                break;
+            case 'nashville_ts':
+                selectByText(bridge, 'T-Style Single Coil');
+                selectByText(middle, 'S-Style Single Coil');
+                selectByText(neck, 'T-Style Single Coil');
+                break;
+            case 'classic_hh':
+                selectByText(bridge, 'Vintage PAF Humbucker');
+                selectByText(middle, 'None');
+                selectByText(neck, 'Vintage PAF Humbucker');
+                break;
+            case 'junior_p90':
+                selectByText(bridge, 'P-90 Soap Bar');
+                selectByText(middle, 'None');
+                selectByText(neck, 'None');
+                break;
+            case 'modern_hss':
+                selectByText(bridge, 'High Output Humbucker');
+                selectByText(middle, 'S-Style Single Coil');
+                selectByText(neck, 'S-Style Single Coil');
+                break;
+            case 'modern_hsh':
+                selectByText(bridge, 'High Output Humbucker');
+                selectByText(middle, 'S-Style Single Coil');
+                selectByText(neck, 'High Output Humbucker');
+                break;
+            case 'modern_hh':
+                selectByText(bridge, 'High Output Humbucker');
+                selectByText(middle, 'None');
+                selectByText(neck, 'High Output Humbucker');
+                break;
+        }
+        lastPreset = preset;
+        isPresetChange = false;
+    }
+
+    presetSelect.addEventListener('change', function() {
+        if (presetSelect.value === "custom") return;
+        setPreset(presetSelect.value);
+    });
+
+    // If user changes any pickup manually, set preset to custom if config doesn't match
+    [bridge, middle, neck].forEach(function(sel) {
+        sel.addEventListener('change', function() {
+            if (isPresetChange) return; // Ignore changes triggered by setPreset
+            if (presetSelect.value === "custom") return;
+            var matches = false;
+            switch (presetSelect.value) {
+                case 'classic_sss':
+                    matches = bridge.value === "S-Style Single Coil" && middle.value === "S-Style Single Coil" && neck.value === "S-Style Single Coil";
+                    break;
+                case 'classic_ts':
+                    matches = bridge.value === "T-Style Single Coil" && middle.value === "None" && neck.value === "T-Style Single Coil";
+                    break;
+                case '70s_ts':
+                    matches = bridge.value === "T-Style Single Coil" && middle.value === "None" && neck.value === "Wide Range Humbucker";
+                    break;
+                case 'nashville_ts':
+                    matches = bridge.value === "T-Style Single Coil" && middle.value === "S-Style Single Coil" && neck.value === "T-Style Single Coil";
+                    break;
+                case 'classic_hh':
+                    matches = bridge.value === "Vintage PAF Humbucker" && middle.value === "None" && neck.value === "Vintage PAF Humbucker";
+                    break;
+                case 'junior_p90':
+                    matches = bridge.value === "P-90 Soap Bar" && middle.value === "None" && neck.value === "None";
+                    break;
+                case 'modern_hss':
+                    matches = bridge.value === "High Output Humbucker" && middle.value === "S-Style Single Coil" && neck.value === "S-Style Single Coil";
+                    break;
+                case 'modern_hsh':
+                    matches = bridge.value === "High Output Humbucker" && middle.value === "S-Style Single Coil" && neck.value === "High Output Humbucker";
+                    break;
+                case 'modern_hh':
+                    matches = bridge.value === "High Output Humbucker" && middle.value === "None" && neck.value === "High Output Humbucker";
+                    break;
+            }
+            if (!matches) {
+                presetSelect.value = "custom";
+            }
+        });
+    });
+})();
+</script>
+<script>
+// --- Pricing Logic ---
+const GUITAR_BASE_PRICE = 500;
+const GUITAR_FINISH_UPCHARGE = {
+    'Candy Apple Red': 40,
+    'Blue Burst': 30,
+    'Cherry Sunburst': 30,
+    'Gold': 30,
+    'Green Burst': 30,
+    'Metallic Purple': 30,
+    'Pelham Blue': 30,
+    'Purple Burst': 30,
+    'Aqua': 20,
+    'Pink': 20,
+    'Blue Burst': 30,
+    'Purple Burst': 30
+};
+const GUITAR_HARDWARE_UPCHARGE = {
+    'Gold': 60,
+    'Black': 30
+};
+const GUITAR_PICKGUARD_UPCHARGE = {
+    'Pearloid': 25,
+    'Tortoise': 20,
+    'Black': 10,
+    'White': 10
+};
+const GUITAR_ADDON_PRICE = 25; // per add-on
+
+function getGuitarSubtotal() {
+    let subtotal = GUITAR_BASE_PRICE;
+    // Finish upcharge
+    const finish = document.getElementById('finish_input') ? document.getElementById('finish_input').value : '';
+    if (GUITAR_FINISH_UPCHARGE[finish]) subtotal += GUITAR_FINISH_UPCHARGE[finish];
+    // Hardware color upcharge
+    const hardware = document.getElementById('hardware_color_input') ? document.getElementById('hardware_color_input').value : '';
+    if (GUITAR_HARDWARE_UPCHARGE[hardware]) subtotal += GUITAR_HARDWARE_UPCHARGE[hardware];
+    // Pickguard upcharge
+    const pickguard = document.getElementById('pickguard_input') ? document.getElementById('pickguard_input').value : '';
+    if (GUITAR_PICKGUARD_UPCHARGE[pickguard]) subtotal += GUITAR_PICKGUARD_UPCHARGE[pickguard];
+    // Add-ons (checkboxes)
+    const addonChecks = document.querySelectorAll('input[name="addons"]:checked');
+    subtotal += addonChecks.length * GUITAR_ADDON_PRICE;
+    return subtotal;
+}
+
+function updateGuitarPriceQuote() {
+    const subtotal = getGuitarSubtotal();
+    document.getElementById('price-quote').textContent = `Subtotal: $${subtotal}`;
+}
+
+// Update price on all relevant changes
+if (document.getElementById('guitarbuilder-form')) {
+    document.getElementById('guitarbuilder-form').addEventListener('change', updateGuitarPriceQuote);
+}
+if (document.getElementById('finish_swatches')) {
+    document.getElementById('finish_swatches').addEventListener('click', function(e) {
+        setTimeout(updateGuitarPriceQuote, 10);
+    });
+}
+if (document.getElementById('hardware_color_swatches')) {
+    document.getElementById('hardware_color_swatches').addEventListener('click', function(e) {
+        setTimeout(updateGuitarPriceQuote, 10);
+    });
+}
+if (document.getElementById('pickguard_swatches')) {
+    document.getElementById('pickguard_swatches').addEventListener('click', function(e) {
+        setTimeout(updateGuitarPriceQuote, 10);
+    });
+}
+// Initial price
+updateGuitarPriceQuote();
+</script>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load specs_extras %}
+<h2>Your Orders</h2>
+<div class="mb-3 d-flex flex-wrap align-items-center gap-2">
+    <form method="get" class="d-inline-flex align-items-center gap-2" id="sort-filter-form">
+        <label class="form-label mb-0">Sort by:</label>
+        <select name="sort" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+            <option value="-created_at" {% if request.GET.sort == '-created_at' or not request.GET.sort %}selected{% endif %}>Latest</option>
+            <option value="created_at" {% if request.GET.sort == 'created_at' %}selected{% endif %}>Oldest</option>
+        </select>
+        <label class="form-label mb-0 ms-3">Category:</label>
+        <select name="category" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+            <option value="" {% if not request.GET.category %}selected{% endif %}>All</option>
+            <option value="guitar" {% if request.GET.category == 'guitar' %}selected{% endif %}>Guitar</option>
+            <option value="bass" {% if request.GET.category == 'bass' %}selected{% endif %}>Bass</option>
+            <option value="drums" {% if request.GET.category == 'drums' %}selected{% endif %}>Drums</option>
+        </select>
+    </form>
+</div>
+{% if orders %}
+    <ul class="list-group">
+        {% for order in orders %}
+            <li class="list-group-item mb-3">
+                <strong>{{ order.get_instrument_display }}</strong><br>
+                <span class="text-muted">Status: {{ order.get_status_display }}</span><br>
+                <span class="text-muted">Created: {{ order.created_at }}</span><br>
+                <span class="text-muted">Total Price: {{ order.total_price }}</span><br>
+                <details>
+                    <summary>Specifications</summary>
+                    <ul>
+                        {% for spec in order.specifications|split_specs %}
+                            <li>{{ spec }}</li>
+                        {% endfor %}
+                    </ul>
+                </details>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You have no orders yet.</p>
+{% endif %}
+{% endblock %}

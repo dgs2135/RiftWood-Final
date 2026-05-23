@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="main-content-boxed animate-fadein">
+    <h1 class="mb-4">Privacy Policy</h1>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <section class="mb-4">
+                <h2 class="h4">Information We Collect</h2>
+                <p>We collect information you provide directly to us when you create an account, make a purchase, or contact us. This may include your name, email address, shipping address, payment details, and any other information you choose to provide.</p>
+            </section>
+            <section class="mb-4">
+                <h2 class="h4">How We Use Your Information</h2>
+                <p>Your information is used to operate and improve our services, process your orders, communicate with you, and personalize your experience. We may also use your information for analytics and to comply with legal obligations.</p>
+            </section>
+            <section class="mb-4">
+                <h2 class="h4">Information Security</h2>
+                <p>We implement appropriate security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction.</p>
+            </section>
+            <section class="mb-4">
+                <h2 class="h4">Third-Party Services</h2>
+                <p>We do not sell your personal information. We may share information with trusted third parties who assist us in operating our website and conducting our business, as long as those parties agree to keep this information confidential.</p>
+            </section>
+            <section class="mb-4">
+                <h2 class="h4">Your Choices</h2>
+                <p>You may update, correct, or delete your account information at any time by accessing your profile. You may also contact us to request changes or ask questions about your data.</p>
+            </section>
+            <section>
+                <h2 class="h4">Contact Us</h2>
+                <p>If you have any questions about our Privacy Policy or how we handle your data, please <a href="{% url 'contact' %}" class="link">contact us</a>.</p>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
